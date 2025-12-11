@@ -1,0 +1,498 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+*, html, body {
+    margin: 0;
+    padding: 0;
+    font-family: "Roboto", "Poppins", sans-serif;
+}
+#landing {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100vh;
+}
+header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+}
+header div:nth-child(1) {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+header div:nth-child(1) h4 {
+    width: 80px;
+}
+header div:nth-child(1) img {
+    width: 45px;
+    height: 45px;
+    background-color: green;
+    padding: 3px;
+    border-radius: 10px;
+}
+.horiLine {
+    height: 0.5px;
+    width: 100vw;
+    background-color: lightgray;
+    /* margin-bottom: -30px; */
+}
+main .heroH {
+    font-size: xx-large;
+    width: fit-content;
+    padding-left: 8.5rem;
+    padding-right: 8.5rem;
+    margin: auto;
+    /* margin-top: 1rem; */
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: bolder;
+    line-height: 1.4;
+}
+main .heroH span {
+    background: linear-gradient(45deg, lightgreen, green);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+main .heroT {
+    margin: auto;
+    text-align: center;
+    padding-left: 8rem;
+    padding-right: 8rem;
+    line-height: 1.5;
+    color: gray;
+}
+main .enterBtn {
+    padding: 20px;
+    padding-left: 80px;
+    padding-right: 80px;
+    border-radius: 50px;
+    color: white;
+    background-color: lightseagreen;
+    border: none;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    margin-top: 2rem;
+    cursor: pointer;
+}
+main .enterBtn:hover {
+    background-color: rgb(27, 145, 139);
+    box-shadow: 0 0 10px 5px rgb(141, 244, 239);
+}
+.fCont {
+    display: grid;
+    background-color: rgb(246, 246, 246);
+    border-radius: 20px;
+    width: 23rem;
+    margin: auto;
+    margin-top: 2rem;
+    gap: 15px;
+    padding: 15px;
+}
+.cont {
+    outline: 0.2px solid lightgray;
+    background-color: white;
+    width: 20rem;
+    margin: auto;
+    padding: 20px;
+    border-radius: 15px;
+}
+.cont img {
+    width: 35px;
+    height: 35px;
+    padding: 5px;
+    margin-bottom: 8px;
+    background-color: lightblue;
+    border-radius: 10px;
+}
+.cont div {
+    color: gray;
+    font-size: small;
+    line-height: 1.4;
+    margin-top: 7px;
+}
+.cont .img2 {
+    background-color: lightpink;
+}
+footer {
+    text-align: center;
+    font-size: smaller;
+    line-height: 1.7;
+    margin-top: 1rem;
+}
+footer div:nth-child(3) {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+} 
+footer img {
+    width: 40px;
+    height: 40px;
+    transition: 0.2s;
+}
+footer .lmt {
+    background-color: black;
+    border-radius: 10px;
+}
+footer .x:hover {
+    background-color: lightgreen;
+    border-radius: 10px;
+}
+
+/* styling for index page */
+#index main {
+    position: relative;
+}
+#index header {
+    justify-content: center;
+    background-color: lightblue;
+    margin-bottom: 2rem;
+    width: 100vw;
+}
+#index header div {
+    display: block;
+    text-align: center;
+}
+#index header div h4 {
+    width: fit-content;
+}
+#index main {
+    text-align: center;
+    margin-top: 10px;
+}
+#index .indexH {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    margin: auto;
+    gap: 20px;
+    margin-bottom: 0.8rem;
+}
+#index .indexH img {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    background-color: pink;
+    border-radius: 50px;
+}
+#index main .load {
+    width: 60px;
+    height: 60px;
+    position: fixed;
+    top: 35%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+#index main .infoCont {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 20;
+    background-color: rgba(0, 0, 0, 0.389);
+    backdrop-filter: blur(3px);
+}
+#index main .infoCont .info {
+    background-color: green;
+    width: fit-content;
+    margin: auto;
+    padding: 25px;
+    border-radius: 20px;
+    margin-top: 20rem;
+    line-height: 1.5;
+    color: lightgreen;
+}
+#index main .infoCont .info h3 {
+    color: white;
+    margin-bottom: 10px;
+}
+#index main form {
+    /* outline: 1px solid red; */
+    margin: auto;
+    width: fit-content;
+    padding: 5px;
+    display: grid;
+    gap: 15px;
+    overflow-y: auto;
+    height: 30rem;
+}
+#index main .timerCont {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.727);
+    backdrop-filter: blur(3px);
+    text-align: center;
+    z-index: 12;
+}
+#index main .timerCont img {
+    margin-top: 20rem;
+    width: 150px;
+    height: 150px;
+}
+#index main .timerCont div {
+    background: linear-gradient(90deg, purple, pink);
+    width: fit-content;
+    font-size: xx-large;
+    font-weight: bold;
+    margin: auto;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+#index main form .choices_1 {
+    display: grid;
+    gap: 15px;
+}
+#index main form .choices_2 {
+    display: grid;
+    gap: 15px;
+}
+#index main form .choice {
+    position: relative;
+    width: 25rem;
+}
+#index main form .choice .check {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10%;
+    z-index: 5;
+}
+#index main form .choice label {
+    display: block;
+    background-color: lightblue;
+    padding: 15px;
+    padding-left: 20px;
+    border-radius: 15px;
+    text-align: left;
+    box-shadow: 0 7px 0 0 rgb(25, 144, 255);
+    cursor: pointer;
+    transition: 0.2s;
+}
+#index main form .choice label:hover {
+    background-color: rgb(104, 198, 230);
+}
+#index main form .choice .check:checked + label {
+    box-shadow: none;
+    transform: translateY(8px);
+    background-color: rgb(104, 198, 230);
+}
+#index main form .choice .check:checked {
+    transform: translateY(3px);
+}
+#index main form .setCont {
+    position: absolute;
+    top: 105%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+#index main form .setCont .count {
+    font-size: small;
+    font-weight: bold;
+    background-color: lightblue;
+    padding: 4px;
+    padding-left: 80px;
+    padding-right: 80px;
+    border-radius: 20px;
+    width: fit-content;
+    margin: auto;
+    margin-bottom: 5px;
+}
+#index main form .setBtn {
+    background-color: limegreen;
+    color: white;
+    font-weight: bolder;
+    font-size: large;
+    padding: 10px;
+    padding-left: 80px;
+    padding-right: 80px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+#index main form .setBtn:hover {
+    background-color: rgb(46, 179, 46);
+}
+#index main form .setCont img {
+    width: 70px;
+    background-color: limegreen;
+    padding: 4.6px;
+    padding-left: 105px;
+    padding-right: 105px;
+    border-radius: 20px;
+    display: none;
+}
+@media(min-width: 850px) {
+    #index main form {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+#index footer {
+    margin-top: 10rem;
+}
+#index .timerCont {
+    display: none;
+}
+#index .checkoutCont {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.727);
+    backdrop-filter: blur(3px);
+    text-align: center;
+    z-index: 12;
+    padding-top: 13rem;
+    display: none;
+}
+#index .checkoutCont h3 {
+    background: linear-gradient(90deg, rgb(167, 0, 167), pink);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+#index .checkoutCont .carouselCont {
+    position: relative;
+}
+#index .checkoutCont .Carousel {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    width: 30rem;
+    overflow-x: auto;
+    margin: auto;
+    margin-top: 10px;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+}
+#index .checkoutCont .Carousel::-webkit-scrollbar {
+    display: none;
+}
+#index .checkoutCont .Carousel .checkout {
+    background-color: white;
+    padding: 20px;
+    padding-left: 40px;
+    padding-right: 40px;
+    border-radius: 20px;
+    height: 200px;
+    width: 220px;
+    scroll-snap-align: start;
+}
+#index .checkoutCont .Carousel .checkout div:nth-child(2) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#index .checkoutCont .Carousel .checkout button {
+    margin: 5px;
+    margin-top: 80px;
+    padding: 10px;
+    padding-left: 40px;
+    padding-right: 40px;
+    border-radius: 10px;
+    border: none;
+    background-color: lightgreen;
+    color: gray;
+    font-weight: bold;
+    font-size: large;
+    opacity: 0.7;
+    cursor: pointer;
+}
+#index .checkoutCont .Carousel .checkout div:nth-child(2) button:nth-child(2) {
+    background-color: tomato;
+    color: white;
+}
+#index .checkoutCont .Carousel .checkout button:hover {
+    opacity: 1;
+}
+.carouselCont {
+    width: fit-content;
+    margin: auto;
+}
+#index .checkoutCont .carouselCont .move:nth-child(1) {
+    position: absolute;
+    width: 60px;
+    z-index: 10;
+    top: 15px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.392);
+    padding-top: 73px;
+    padding-bottom: 73px;
+    padding-left: 5px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    box-shadow: 0 0 8px 17px rgba(0, 0, 0, 0.392);
+    cursor: pointer;
+    opacity: 0.5;
+    transition: 0.2s;
+    /* display: none; */
+}
+#index .checkoutCont .carouselCont .move:nth-child(1):hover {
+    opacity: 1;
+}
+#index .carouselCont img:nth-child(2) {
+    position: absolute;
+    width: 100px;
+    z-index: 10;
+    top: 15px;
+    left: 355px;
+    background-color: rgba(0, 0, 0, 0.527);
+    padding-top: 57px;
+    padding-bottom: 57px;
+    padding-right: 25px;
+    box-shadow: 0 0 9px 14px rgba(0, 0, 0, 0.527);
+    cursor: pointer;
+}
+#index .checkoutCont .carouselCont .outcome {
+    position: absolute;
+    z-index: 20;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: lightblue;
+    width: 26rem;
+    height: 20rem;
+    padding: 10px;
+    border-radius: 20px;
+    display: none;
+}
+#index .checkoutCont .carouselCont .outcome div:nth-child(1) {
+    font-size: 70px;
+    display: none;
+}
+#index .checkoutCont .carouselCont .outcome div:nth-child(1) span:nth-child(1) {
+    font-size: 200px;
+}
+#index .checkoutCont .carouselCont .outcome .perform {
+    font-weight: bolder;
+    font-size: large;
+}
+#index .checkoutCont .carouselCont .outcome #outcomeLoader {
+    width: 60px;
+    height: 60px;
+    margin-top: 7rem;
+    /* display: none; */
+}
+#index .checkoutCont .carouselCont .outcome #confetti {
+    width: 250px;
+    z-index: 20;
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+}
+#index .checkoutCont .carouselCont .outcome #cancel {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+}

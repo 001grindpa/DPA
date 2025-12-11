@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+    <header>
+        <div>
+            <img src="{{ url_for('static', filename='images/one-decision-logo.png') }}" alt="logo">
+            <h4>DAILY POSITIVE ACTIONS</h4>
+        </div>
+        <h5>We Help You Become Progressively Better.</h5>
+    </header>
+    <div class="horiLine"></div>
+    <main>
+        <div class="heroH">Master your day, <span>5 choices</span> at a time.</div>
+        <div class="heroT">
+            <div>Pick 5 habits in the morning. Check them off at night.</div>
+            <div>No clutter. No ads. Just progress.</div>
+        </div>
+        <form action="/landing" method="post">
+            <input name="enter" type="hidden" value="launch">
+            <button class="enterBtn" type="submit">Start Your Day</button>
+        </form>
+        <div class="fCont">
+            <div class="cont">
+                <img src="{{ url_for('static', filename='images/thought.png') }}" alt="broken_thought">
+                <h4>Zero Decision Fatigue</h4>
+                <div>Don't waste energy deciding what to do. We curate the list, you just commit.</div>
+            </div>
+            <div class="cont">
+                <img class="img2" src="{{ url_for('static', filename='images/wallet_btc.png') }}" alt="btc_wallet_icon">
+                <h4>Web3 integration</h4>
+                <div>Optional wallet connection to store your streaks permanently on-chain.</div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div>Like Minded Troop(LMT) Affilliated Project</div>
+        <div>&copy; 2025 Like Minded Troop</div>
+        <div>
+            <img class="lmt" src="{{ url_for('static', filename='images/lmt_no_tagline.png') }}" alt="LMT logo">
+            <a href="https://www.x.com/lmt_dao"><img class="x" src="{{ url_for('static', filename='images/x.png') }}" alt="X logo"></a>
+        </div>
+    </footer>
+
+{% endblock %}

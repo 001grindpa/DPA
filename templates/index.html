@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+    <header>
+        <div>
+            <img src="{{ url_for('static', filename='images/one-decision-logo.png') }}" alt="logo">
+            <h4>DAILY POSITIVE ACTIONS</h4>
+        </div>
+    </header>
+    <main>
+        <div class="indexH"><h3>Choose Your 5 Actions for Today</h3><img src="{{ url_for('static', filename='images/info.png') }}" alt="info"></div>
+        <div class="infoCont">
+            <div class="info">
+                <h3>INSTRUCTIONS</h3>
+                <ul>
+                    <li>Select and set up to 5 tasks to accomplish for the day.</li>
+                    <li>Come back at night to check them off.</li>
+                </ul>
+            </div>
+        </div>
+        <img class="load" src="{{ url_for('static', filename='images/Loading3.gif') }}" alt="loading_3">
+        <form>
+            <div class="choices_1">
+                <!-- <div class="choice">
+                    <input name="choice1" value="Drink 1L of Water" type="checkbox" id="check" class="check">
+                    <label for="check">Drink 1L of Water</label>
+                </div> -->
+            </div>
+            <div class="choices_2">
+                <!-- <div class="choice">
+                    <input name="choice1" value="No Junk Food" type="checkbox" id="check11" class="check">
+                    <label for="check11">No Junk Food</label>
+                </div> -->
+            </div>
+            <div class="setCont">
+                <div class="count"><span>0</span> of 5 Selected</div>
+                <div class="btnCont">
+                    <input class="setBtn" type="submit" value="Set Daily Tasks">
+                    <img src="{{ url_for('static', filename='images/loading4.gif') }}" alt="loading_gif">
+                </div>
+            </div>
+        </form>
+        <div class="timerCont">
+            <img src="{{ url_for('static', filename='images/timer2.gif') }}" alt="timer">
+            <div class="countDown">
+                <div>Come back in</div>
+                <span id="hr">0</span>hr <span id="min">0</span>min <span id="sec">0</span>sec
+            </div>
+        </div>
+        <div class="checkoutCont">
+            <h3>Did you complete the daily task?</h3>
+            <div class="carouselCont">
+                <img class="move" src="{{ url_for('static', filename='images/left-arrows.png') }}" alt="left_arrow">
+                <img class="move" src="{{ url_for('static', filename='images/right-arrow.gif') }}" alt="right_arrow">
+                <div class="outcome">
+                    <div><span>0</span><span>%</span></div>
+                    <div class="perform">How did you do?</div>
+                    <img id="cancel" src="{{ url_for('static', filename='images/cancel.png') }}" alt="cancel">
+                    <img id="outcomeLoader" src="{{ url_for('static', filename='images/Loading3.gif') }}" alt="loader">
+                    <img id="confetti" src="{{ url_for('static', filename='images/Confetti.gif') }}" alt="confetti">
+                    <audio id="confettiPop" src="{{ url_for('static', filename='sounds/confetti_pop.mp3') }}" type="audio/mpeg"></audio>
+                </div>
+                <div class="Carousel">
+                    {% for task in tasks %}
+                    <div class="checkout">
+                        <div class="taskTitle">"{{ tasks[task] }}"</div>
+                        <div><button class="yes">Yes</button><button class="no">No</button></div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div>Like Minded Troop(LMT) Affilliated Project</div>
+        <div>&copy; 2025 Like Minded Troop</div>
+        <div>
+            <img class="lmt" src="{{ url_for('static', filename='images/lmt_no_tagline.png') }}" alt="LMT logo">
+            <a href="https://www.x.com/lmt_dao"><img class="x" src="{{ url_for('static', filename='images/x.png') }}" alt="X logo"></a>
+        </div>
+    </footer>
+
+{% endblock %}
