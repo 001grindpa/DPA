@@ -10,7 +10,7 @@ api_key = os.getenv("FIREWORKS_API_KEY")
 
 
 def get_tasks():
-    prompt = "give me a list of 50 practices i can follow daily, in order to live a healthier life."
+    prompt = "give me a list of 50 practices i can follow today, focus on mindset, health, productivity or over-all well being in order to live a healthier life."
     system_prompt = """
     you are a concise daily habbit assistant
     follow these rules:
@@ -30,7 +30,7 @@ def get_tasks():
     payload = {
         "model": "accounts/fireworks/models/gpt-oss-120b",
         "messages": messages,
-        "max_tokens": 1300
+        "max_tokens": 1000
     }
     url = "https://api.fireworks.ai/inference/v1/chat/completions"
 

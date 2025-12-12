@@ -342,7 +342,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     count.textContent = eval(Number(count.textContent) - 1);
                 }
                 if (count.textContent === "0") {
-                    setBtn.disabled = true
+                    setBtn.disabled = true;
                 }
             });
         };
