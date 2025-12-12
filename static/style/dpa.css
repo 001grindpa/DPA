@@ -157,6 +157,97 @@ footer .x:hover {
 #index header div h4 {
     width: fit-content;
 }
+#index .hambugger {
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: 0.35s;
+}
+#index .hambugger:hover {
+    background-color: rgba(0, 0, 0, 0.291);
+}
+#index #checkBugger + label {
+    display: block;
+    position: absolute;
+    top: -25px;
+    left: 5px;
+    z-index: 18;
+}
+#index main .sideBar {
+    position: absolute;
+    top: -32px;
+    left: 0;
+    background: linear-gradient(rgb(25, 144, 255), white);
+    z-index: 17;
+    width: 250px;
+    height: 100%;
+    padding: 5px;
+    padding-top: 20px;
+    transform: translateX(-100%);
+    transition: 0.35s;
+}
+#index #checkBugger:checked + label + .sideBar {
+    transform: translateX(0);
+}
+@media(min-width: 850px) {
+    #index main .sideBar {
+        transform: translateX(0);
+    }
+    #index .hambugger {
+        display: none;
+    }
+}
+#index #checkBugger {
+    display: none;
+}
+#index main .sideBar .streak {
+    width: fit-content;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: lightblue;
+    margin: auto;
+}
+#index main .sideBar .streak .month {
+    background-color: rgb(25, 144, 255);
+    padding: 5px;
+    border-radius: 5px;
+    color: white;
+    font-size: xx-large;
+    font-weight: bold;
+}
+#index main .sideBar .streak .day {
+    font-weight: bolder;
+    margin: auto;
+    margin-top: 5px;
+    border-radius: 5px;
+    background-color: white;
+    padding: 5px;
+    width: fit-content;
+}
+#index main .sideBar .streak img {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 58px;
+    right: 105px;
+    display: none;
+}
+#index main .sideBar .streakCount {
+    margin-top: 40px;
+    text-align: left;
+    padding: 10px;
+}
+#index main .sideBar .streakCount h3 {
+    color: gold;
+}
+#index main .sideBar .streakCount .count {
+    color: white;
+    font-weight: bold;
+}
+#index main .sideBar .streakCount .count span:nth-child(1) {
+    font-size: 50px;
+}
 #index main {
     text-align: center;
     margin-top: 10px;

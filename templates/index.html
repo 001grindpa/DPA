@@ -9,6 +9,19 @@
         </div>
     </header>
     <main>
+        <input type="checkbox" id="checkBugger">
+        <label for="checkBugger"><img class="hambugger" src="{{ url_for('static', filename='images/hambugger2.png') }}" alt="hambugger menu"></label>
+        <div class="sideBar">
+            <div class="streak">
+                <div class="month">Month</div>
+                <div class="day">Day</div>
+                <img src="{{ url_for('static', filename='images/checkmark.png') }}" alt="checkmark">
+            </div>
+            <div class="streakCount">
+                <h3>Streak:</h3>
+                <div class="count"><span>0</span><span>days</span></div>
+            </div>
+        </div>
         <div class="indexH"><h3>Choose Your 5 Actions for Today</h3><img src="{{ url_for('static', filename='images/info.png') }}" alt="info"></div>
         <div class="infoCont">
             <div class="info">

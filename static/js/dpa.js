@@ -1,5 +1,11 @@
 document.addEventListener("DOMContentLoaded", async () => {
     if (document.body.id === "index") {
+        let body = document.querySelector("body");
+        let sidebarCheck = body.querySelector("#checkBugger");
+        let sideBar = body.querySelector("main .sideBar");
+        let streakCheck = body.querySelector("main .sideBar .streak img");
+        let streakMonth = body.querySelector("main .sideBar .streak .month");
+        let streakDay = body.querySelector("main .sideBar .streak .day");
         let form = document.querySelector("main form");
         let count = document.querySelector("form .setCont .count span");
         let choices_1 = document.querySelector("form .choices_1");
@@ -33,6 +39,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         let confetti = document.querySelector(".carouselCont .outcome #confetti");
         let confettiPop = document.querySelector("#confettiPop");
         let cancel = document.querySelector(".carouselCont .outcome #cancel");
+
+        // streakCheck.style.display = "block";
+        let month = new Date().toLocaleString('en-US', {month: 'short'});
+        streakMonth.textContent = month;
+        let day = new Date().getDate();
+        streakDay.textContent = day;
 
         setBtn.disabled = true;
         
@@ -320,7 +332,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             
         }
-        await get_tasks()
+        // await get_tasks()
 
         let checks = document.querySelectorAll("form .check");
 

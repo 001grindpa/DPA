@@ -9,7 +9,7 @@ Don't waste energy deciding what to do. An LLM curates the list, you just commit
 Optional wallet connection to store your streaks permanently on-chain.
 
 ## Overall
-Whether you're working on your health, mindset, productivity, or general well0being, DPA makes it easy to stay intentional and accountable; one day at a time.
+Whether you're working on your health, mindset, productivity, or general well being, DPA makes it easy to stay intentional and accountable; one day at a time.
 
 # Dev aid
 ## clone the repo
