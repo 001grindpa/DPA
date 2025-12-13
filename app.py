@@ -53,6 +53,14 @@ def cancel():
     session["tasks"] = None
     return jsonify({"msg": "tasks session cancelled"})
 
+@app.route("/streak")
+def streak():
+    if not session.get("days"):
+        session["days"] = 1
+        return jsonify({"msg": session.get("days")})
+    session["days"] = session.get("days") + 1
+    return jsonify({"msg": session.get("days")})
+
 
 if "__name__" == "__main__":
     app.run(port=8080, use_reloader=True, debug=True, reloader_type="watchdog")

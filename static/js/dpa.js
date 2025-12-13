@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         let streakCheck = body.querySelector("main .sideBar .streak img");
         let streakMonth = body.querySelector("main .sideBar .streak .month");
         let streakDay = body.querySelector("main .sideBar .streak .day");
+        let streakCount = body.querySelector(".sideBar .streakCount .count span:nth-child(1)");
+        let streakCountDay = body.querySelector(".sideBar .streakCount .count span:nth-child(2)");
         let form = document.querySelector("main form");
         let count = document.querySelector("form .setCont .count span");
         let choices_1 = document.querySelector("form .choices_1");
@@ -40,7 +42,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         let confettiPop = document.querySelector("#confettiPop");
         let cancel = document.querySelector(".carouselCont .outcome #cancel");
 
-        // streakCheck.style.display = "block";
+        // streakCount.textContent = "5";
+
         let month = new Date().toLocaleString('en-US', {month: 'short'});
         streakMonth.textContent = month;
         let day = new Date().getDate();
@@ -201,11 +204,35 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log({error: error});
         }
 
+        // display check symbol and disable form btn on page load if user already checked in
+
+        if (document.cookie.includes("checkIn=true")) {
+                streakCheck.style.display = "block";
+                setBtn.style.background = "gray";
+                setBtn.disabled = true;
+            }
+
+        // submit choosen tasks
+
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
+
+            // if already checked in, return a message that acknowledges that
+            if (document.cookie.includes("checkIn=true")) {
+                return alert("You've already completed today's activities. Please come back tomorrow");
+            }
+
             setBtn.style.display="none";
             setLoader.style.display="block";
+
+            // start check in cookie declaration when user submits tasks
+            midnight = new Date();
+            midnight.setHours(24, 0, 0);
+
+            document.cookie = `checkIn=true; expires=${midnight.toUTCString()}; path=/`;
+            streakCheck.style.display = "block";
             
+            // api call (list of choosen tasks are stored in a filesystem session untill cleared)
             const form_data = Object.fromEntries(new FormData(form));
             try {
                 r = await fetch("/", {
@@ -226,10 +253,37 @@ document.addEventListener("DOMContentLoaded", async () => {
             catch(error) {
                 console.log({error: error});
             }
+
+            // get current streak
+            try {
+                r2 = await fetch("/streak");
+                str = await r2.json();
+
+                streakCount.textContent = str.msg;
+                document.cookie = `currentStreak=${str.msg}`;
+                if (str.msg == 1) {
+                    streakCountDay.textContent = "day";
+                }
+            }
+            catch(error) {
+                console.log({error: error});
+            }
         });
 
+        // find and declare the currentStreak cookie value globally
+        let currentStreak = document.cookie.split("; ").find(c => c.startsWith("currentStreak="))?.split("=")[1];
+
+        if (currentStreak) {
+            streakCount.textContent = currentStreak;
+        }
+        else {
+            streakCount.textContent = "0";
+        }
+
+        console.log(document.cookie);
+
         let currentHour = new Date().getHours();
-        let startingHour = 0 - currentHour;
+        let startingHour = 20 - currentHour;
         let time = startingHour * 3600; // get full time in seconds
 
         function countDown() {
@@ -332,7 +386,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             
         }
-        // await get_tasks()
+        await get_tasks()
 
         let checks = document.querySelectorAll("form .check");
 

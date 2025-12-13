@@ -181,7 +181,7 @@ footer .x:hover {
     background: linear-gradient(rgb(25, 144, 255), white);
     z-index: 17;
     width: 250px;
-    height: 100%;
+    height: 120%;
     padding: 5px;
     padding-top: 20px;
     transform: translateX(-100%);
@@ -226,11 +226,11 @@ footer .x:hover {
     width: fit-content;
 }
 #index main .sideBar .streak img {
-    width: 50px;
-    height: 50px;
+    width: 53px;
+    height: 53px;
     position: absolute;
-    top: 58px;
-    right: 105px;
+    top: 80px;
+    right: 100px;
     display: none;
 }
 #index main .sideBar .streakCount {
@@ -320,7 +320,8 @@ footer .x:hover {
     background-color: rgba(0, 0, 0, 0.727);
     backdrop-filter: blur(3px);
     text-align: center;
-    z-index: 12;
+    z-index: 20;
+    display: none;
 }
 #index main .timerCont img {
     margin-top: 20rem;
@@ -428,9 +429,6 @@ footer .x:hover {
 #index footer {
     margin-top: 10rem;
 }
-#index .timerCont {
-    display: none;
-}
 #index .checkoutCont {
     position: fixed;
     top: 0;
@@ -440,7 +438,7 @@ footer .x:hover {
     background-color: rgba(0, 0, 0, 0.727);
     backdrop-filter: blur(3px);
     text-align: center;
-    z-index: 12;
+    z-index: 20;
     padding-top: 13rem;
     display: none;
 }
