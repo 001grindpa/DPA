@@ -70,7 +70,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             allYes[i].addEventListener("click", () => {
                 allYes[i].disabled = true;
                 allYes[i].style.opacity = "1";
-                allNo[i].style.display = "none";
+                allNo[i].disabled = true;
+                allNo[i].style.opacity = "0.2";
 
                 gain = gain + 1;
                 console.log(`gain: ${gain}`)
@@ -80,7 +81,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             allNo[i].addEventListener("click", () => {
                 allNo[i].disabled = true;
                 allNo[i].style.opacity = "1";
-                allYes[i].style.display = "none";
+                allYes[i].style.opacity = "0.2";
+                allYes[i].disabled = true;
 
                 loss = loss + 1;
                 console.log(`losses: ${loss}`);
@@ -217,6 +219,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
 
+            // remove the cookie that kepps count down off
+            document.cookie = "countDown=false; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+
             // if already checked in, return a message that acknowledges that
             if (document.cookie.includes("checkIn=true")) {
                 return alert("You've already completed today's activities. Please come back tomorrow");
@@ -279,6 +284,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         else {
             streakCount.textContent = "0";
         }
+        // reset streak
+        function resetStreak() {
+            
+        }
 
         console.log(document.cookie);
 
@@ -295,9 +304,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             seonds = seconds < 10? '0'+seconds : seconds;
 
             if (time === 0 || hour < 0) {
-                countDownCont.style.display = "none";
+                document.cookie = "countDown=false; path=/";
                 if (taskTitle.textContent != '"No tasks available"') {
                     checkoutCont.style.display = "block";
+                }
+                if (document.cookie.includes("countDown=false")) {
+                    countDownCont.style.display = "none";
                 }
             }
 

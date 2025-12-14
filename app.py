@@ -61,6 +61,11 @@ def streak():
     session["days"] = session.get("days") + 1
     return jsonify({"msg": session.get("days")})
 
+@app.route("/clearStreak")
+def clearStreak():
+    session["days"] = None
+    return jsonify({"msg": "streak cleared"})
+
 
 if "__name__" == "__main__":
     app.run(port=8080, use_reloader=True, debug=True, reloader_type="watchdog")
