@@ -293,7 +293,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         let currentHour = new Date().getHours();
         let startingHour = 20 - currentHour;
+        let countDownEnd = Date.now() + (startingHour * (3600 * 1000));
+        if (!localStorage.getItem("countDownEnd")) {
+            localStorage.setItem("countDownEnd", countDownEnd);
+        }
+
         let time = startingHour * 3600; // get full time in seconds
+
+        console.log({futureTimeUnix: localStorage.getItem("countDownEnd")});
+        console.log({currentTimeUnix: Date.now()});
 
         function countDown() {
             let hour = Math.floor(time/3600);
@@ -303,13 +311,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             minute = minute < 10? '0'+minute : minute;
             seonds = seconds < 10? '0'+seconds : seconds;
 
-            if (time === 0 || hour < 0) {
+            if (Number(localStorage.getItem("countDownEnd")) <= Date.now()) {
+                localStorage.removeItem("countDownEnd");
                 document.cookie = "countDown=false; path=/";
-                if (taskTitle.textContent != '"No tasks available"') {
-                    checkoutCont.style.display = "block";
-                }
                 if (document.cookie.includes("countDown=false")) {
                     countDownCont.style.display = "none";
+                }
+                if (taskTitle.textContent != '"No tasks available"') {
+                    checkoutCont.style.display = "block";
                 }
             }
 
