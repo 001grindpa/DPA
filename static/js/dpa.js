@@ -194,16 +194,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         tasks = "";
 
         // send an auto api request to '/api/choosen_tasks', if the returned array is not empty, display timer countdown
-        try {
-            r = await fetch("/api/choosen_tasks")
-            data = await r.json();
-            console.log(data.msg);
-            if ((data.msg).length != 0) {
-                countDownCont.style.display = "block";
+        // if document.cookie includes "countDown=false" remove timer
+        if (!document.cookie.includes("countDown=false")) {
+            try {
+                r = await fetch("/api/choosen_tasks")
+                data = await r.json();
+                console.log(data.msg);
+                if ((data.msg).length != 0) {
+                    countDownCont.style.display = "block";
+                }
             }
-        }
-        catch(error) {
-            console.log({error: error});
+            catch(error) {
+                console.log({error: error});
+            }
         }
 
         // display check symbol and disable form btn on page load if user already checked in
