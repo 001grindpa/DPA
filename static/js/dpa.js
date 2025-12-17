@@ -197,8 +197,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         // if document.cookie includes "countDown=false" remove timer
         if (!document.cookie.includes("countDown=false")) {
             try {
-                r = await fetch("/api/choosen_tasks")
-                data = await r.json();
+                let r = await fetch("/api/choosen_tasks")
+                let data = await r.json();
                 console.log(data.msg);
                 if ((data.msg).length != 0) {
                     countDownCont.style.display = "block";
@@ -239,16 +239,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             document.cookie = `checkIn=true; expires=${midnight.toUTCString()}; path=/`;
             streakCheck.style.display = "block";
+
+            const streakDeadline = Date.now() + (48 * 3600) * 1000;
+            localStorage.setItem("streakDeadline", streakDeadline);
+            console.log({streakExpires: localStorage.getItem("streakDeadline")})
             
             // api call (list of choosen tasks are stored in a filesystem session untill cleared)
             const form_data = Object.fromEntries(new FormData(form));
             try {
-                r = await fetch("/", {
+                let r = await fetch("/", {
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
                     body: JSON.stringify(form_data)
                 })
-                data = await r.json();
+                let data = await r.json();
                 console.log(data.msg);
                 
                 setTimeout(() => {
@@ -288,8 +292,21 @@ document.addEventListener("DOMContentLoaded", async () => {
             streakCount.textContent = "0";
         }
         // reset streak
-        function resetStreak() {
-            
+        console.log({"streak expires in": localStorage.getItem("streakDeadline")})
+        if (localStorage.getItem("streakDeadline")) {
+            if (localStorage.getItem("streakDeadline") <= Date.now()) {
+                try {
+                    let r = await fetch("/clearStreak");
+                    let data = await r.json();
+                    console.log(data.msg)
+                    alert("You've lost your active streak");
+
+                    streakCount.textContent = "0";
+                }
+                catch(error) {
+                    console.log({error: error})
+                }
+            }
         }
 
         console.log(document.cookie);
