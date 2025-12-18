@@ -41,9 +41,33 @@ document.addEventListener("DOMContentLoaded", async () => {
         let confetti = document.querySelector(".carouselCont .outcome #confetti");
         let confettiPop = document.querySelector("#confettiPop");
         let cancel = document.querySelector(".carouselCont .outcome #cancel");
+        const viewSelected = document.querySelector("main .timerCont .viewTasks");
+        const viewSlide = document.querySelector("main .timerCont .viewTasks + div ul");
 
-        // streakCount.textContent = "5";
+        // view selected tasks logic
+        viewSelected.addEventListener("click", () => {
+            if (viewSlide.classList.contains("slideOut")) {
+                viewSlide.classList.remove("slideOut");
+                viewSelected.textContent = "View selected tasks";
+            }
+            else {
+                viewSlide.classList.add("slideOut");
+                viewSelected.textContent = "Hide from view";
+            }
+        })
+        console.log("form third api call:", localStorage.getItem("selectedTasks"));
+        const choosenTasks = JSON.parse(localStorage.getItem("selectedTasks")) //JSON.parse() converts str(primitive datatype) to obj
+        if (choosenTasks) {
+            console.log(choosenTasks);
+            
+            for (let i=0; i<choosenTasks.length; i++) {
+                let task = document.createElement("li");
+                task.textContent = choosenTasks[i];
+                viewSlide.appendChild(task);
+            }
+        }
 
+        // strak date and check logic
         let month = new Date().toLocaleString('en-US', {month: 'short'});
         streakMonth.textContent = month;
         let day = new Date().getDate();
@@ -256,15 +280,20 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log(data.msg);
                 
                 setTimeout(() => {
+                    alert("You've successfully setup your daily tasks");
                     setBtn.style.display="block";
                     setLoader.style.display="none";
                     countDownCont.style.display = "block";
-                    alert("You've successfully setup your daily tasks");
                 }, 3000);
             }
             catch(error) {
                 console.log({error: error});
             }
+
+            // display check symbol and disable form btn
+            streakCheck.style.display = "block";
+            setBtn.style.background = "gray";
+            setBtn.disabled = true;
 
             // get current streak
             try {
@@ -279,6 +308,27 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             catch(error) {
                 console.log({error: error});
+            }
+
+            // get stored selected tasks
+            try {
+                let r3 = await fetch("/api/choosen_tasks")
+                let data3 = await r3.json();
+                console.log(data.msg);
+                localStorage.setItem("selectedTasks", JSON.stringify(data3.msg));
+                if ((data.msg).length != 0) {
+                    countDownCont.style.display = "block";
+                }
+            }
+            catch(error) {
+                console.log({error: error});
+            }
+
+            const choosenTasks = JSON.parse(localStorage.getItem("selectedTasks"));
+            for (let i=0; i<choosenTasks.length; i++) {
+                let task = document.createElement("li");
+                task.textContent = choosenTasks[i];
+                viewSlide.appendChild(task);
             }
         });
 
@@ -427,15 +477,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             
         }
-        await get_tasks()
+        await get_tasks();
 
         let checks = document.querySelectorAll("form .check");
 
         for (let i=0; i < checks.length; i++) {
             checks[i].addEventListener("click", (e) => {
                 let task = e.target;
-                // alert("you just checked a box");
                 count.textContent = 0;
+                
                 for (let choice of checks) {
                     if (choice.checked === true) {
                         setBtn.disabled = false;
