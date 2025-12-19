@@ -261,12 +261,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             midnight = new Date();
             midnight.setHours(24, 0, 0);
 
+            // remove the previous countdown deadlines when a new form is subitted
+            localStorage.removeItem("countDownEnd");
             document.cookie = `checkIn=true; expires=${midnight.toUTCString()}; path=/`;
             streakCheck.style.display = "block";
 
             const streakDeadline = Date.now() + (48 * 3600) * 1000;
             localStorage.setItem("streakDeadline", streakDeadline);
             console.log({streakExpires: localStorage.getItem("streakDeadline")})
+
+            // reset daily countdown session
+            let currentHour = new Date().getHours();
+            let startingHour = 20 - currentHour;
+            let countDownEnd = Date.now() + (startingHour * (3600 * 1000));
+            localStorage.setItem("countDownEnd", countDownEnd);
             
             // api call (list of choosen tasks are stored in a filesystem session untill cleared)
             const form_data = Object.fromEntries(new FormData(form));
@@ -337,6 +345,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (currentStreak) {
             streakCount.textContent = currentStreak;
+            if (currentStreak == 1) {
+                streakCountDay.textContent = "day";
+            }
         }
         else {
             streakCount.textContent = "0";
@@ -359,19 +370,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
 
-        console.log(document.cookie);
-
         let currentHour = new Date().getHours();
         let startingHour = 20 - currentHour;
-        let countDownEnd = Date.now() + (startingHour * (3600 * 1000));
-        if (!localStorage.getItem("countDownEnd")) {
-            localStorage.setItem("countDownEnd", countDownEnd);
-        }
 
         let time = startingHour * 3600; // get full time in seconds
 
         console.log({futureTimeUnix: localStorage.getItem("countDownEnd")});
         console.log({currentTimeUnix: Date.now()});
+        console.log(document.cookie);
 
         function countDown() {
             let hour = Math.floor(time/3600);
@@ -382,7 +388,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             seonds = seconds < 10? '0'+seconds : seconds;
 
             if (Number(localStorage.getItem("countDownEnd")) <= Date.now()) {
-                localStorage.removeItem("countDownEnd");
                 document.cookie = "countDown=false; path=/";
                 if (document.cookie.includes("countDown=false")) {
                     countDownCont.style.display = "none";

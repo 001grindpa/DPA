@@ -30,7 +30,7 @@ def get_tasks():
     payload = {
         "model": "accounts/fireworks/models/gpt-oss-120b",
         "messages": messages,
-        "max_tokens": 1300
+        "max_tokens": 750
     }
     url = "https://api.fireworks.ai/inference/v1/chat/completions"
 

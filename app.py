@@ -5,7 +5,7 @@ import json
 from organizer import get_tasks
 
 # databse integration 
-db = SQL("sqlite:///dpa.db")
+# db = SQL("sqlite:///dpa.db")
 
 # app declaration
 app = Flask(__name__)
