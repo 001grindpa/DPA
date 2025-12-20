@@ -68,9 +68,8 @@ main .heroT {
     color: gray;
 }
 main .enterBtn {
-    padding: 20px;
-    padding-left: 80px;
-    padding-right: 80px;
+    width: fit-content;
+    padding: 20px 80px;
     border-radius: 50px;
     color: white;
     background-color: lightseagreen;
@@ -179,7 +178,7 @@ footer .x:hover {
 #index #checkBugger + label {
     display: block;
     position: absolute;
-    top: -53px;
+    top: -54px;
     left: 5px;
     z-index: 18;
 }

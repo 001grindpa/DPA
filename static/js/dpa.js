@@ -370,7 +370,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
 
-        let currentHour = new Date().getHours();
+        let currentHour = (new Date().getHours()) - 1;
         let startingHour = 20 - currentHour;
 
         let time = startingHour * 3600; // get full time in seconds
