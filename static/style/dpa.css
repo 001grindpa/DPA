@@ -69,7 +69,7 @@ main .heroT {
 }
 main .enterBtn {
     width: fit-content;
-    padding: 20px 80px;
+    padding: 15px 50px;
     border-radius: 50px;
     color: white;
     background-color: lightseagreen;
@@ -189,7 +189,7 @@ footer .x:hover {
     background: linear-gradient(rgb(25, 144, 255), white);
     z-index: 17;
     width: 250px;
-    height: 60%;
+    height: 70%;
     padding: 5px;
     padding-top: 20px;
     transform: translateX(-100%);
