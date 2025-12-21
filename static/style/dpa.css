@@ -8,6 +8,8 @@
 :root {
     --pri: green;
     --size: 1rem;
+    --spBlue: rgb(25, 144, 255);
+    --spBlueHover: rgb(0, 132, 255);
 }
 #landing {
     display: flex;
@@ -154,9 +156,30 @@ footer .x:hover {
     position: relative;
 }
 #index header {
-    justify-content: center;
+    justify-content: space-around;
     background-color: lightblue;
     margin-bottom: 2rem;
+}
+#index header #connectWallet {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    background-color: var(--spBlue);
+    padding: 2px 15px;
+    border-radius: 30px;
+    cursor: pointer;
+}
+#index header #connectWallet:hover {
+    background-color: var(--spBlueHover);
+}
+#index header div:nth-child(2) img {
+    width: 30px;
+}
+#index header div:nth-child(2) div {
+    font-weight: bold;
+    width: 60px;
 }
 #index header div {
     display: block;
