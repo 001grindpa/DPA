@@ -9,7 +9,7 @@
     --pri: green;
     --size: 1rem;
     --spBlue: rgb(25, 144, 255);
-    --spBlueHover: rgb(0, 132, 255);
+    --spBlueHover: rgb(0, 119, 231);
 }
 #landing {
     display: flex;
@@ -42,15 +42,13 @@ header div:nth-child(1) img {
     height: 0.5px;
     width: 100vw;
     background-color: lightgray;
-    /* margin-bottom: -30px; */
 }
 main .heroH {
     font-size: xx-large;
     width: fit-content;
-    padding-left: 8.5rem;
-    padding-right: 8.5rem;
+    padding-left: 4rem;
+    padding-right: 4rem;
     margin: auto;
-    /* margin-top: 1rem; */
     margin-bottom: 1rem;
     text-align: center;
     font-weight: bolder;
@@ -64,14 +62,15 @@ main .heroH span {
 main .heroT {
     margin: auto;
     text-align: center;
-    padding-left: 8rem;
-    padding-right: 8rem;
+    padding-left: 5rem;
+    padding-right: 5rem;
     line-height: 1.5;
     color: gray;
 }
 main .enterBtn {
+    position: relative;
     width: fit-content;
-    padding: 15px 50px;
+    padding: 15px 2rem;
     border-radius: 50px;
     color: white;
     background-color: lightseagreen;
@@ -80,16 +79,20 @@ main .enterBtn {
     transform: translateX(-50%);
     margin-top: 2rem;
     cursor: pointer;
+    transition: 0.25s ease-in-out;
+    /* transform-origin: center center; */
 }
 main .enterBtn:hover {
     background-color: rgb(27, 145, 139);
-    box-shadow: 0 0 10px 5px rgb(141, 244, 239);
+    box-shadow: 0 0 10px 15px rgb(141, 244, 239);
+    /* transform: scale(1.1); */
 }
 .fCont {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     background-color: rgb(246, 246, 246);
     border-radius: 20px;
-    width: 23rem;
+    width: fit-content;
     margin: auto;
     margin-top: 2rem;
     gap: 15px;
@@ -98,10 +101,11 @@ main .enterBtn:hover {
 .cont {
     outline: 0.2px solid lightgray;
     background-color: white;
-    width: 20rem;
+    width: 17rem;
     margin: auto;
     padding: 20px;
     border-radius: 15px;
+    flex: 0 1 auto;
 }
 .cont img {
     width: 35px;
@@ -170,6 +174,7 @@ footer .x:hover {
     padding: 2px 15px;
     border-radius: 30px;
     cursor: pointer;
+    transition: 0.2s;
 }
 #index header #connectWallet:hover {
     background-color: var(--spBlueHover);
@@ -203,16 +208,15 @@ footer .x:hover {
     position: absolute;
     top: -54px;
     left: 5px;
-    z-index: 18;
 }
 #index main .sideBar {
     position: fixed;
-    top: 94px;
+    top: 1px;
     left: 0;
     background: linear-gradient(rgb(25, 144, 255), white);
     z-index: 17;
     width: 250px;
-    height: 75%;
+    height: 50rem;
     padding: 5px;
     padding-top: 20px;
     transform: translateX(-100%);
@@ -221,11 +225,14 @@ footer .x:hover {
 #index #checkBugger:checked + label + .sideBar {
     transform: translateX(0);
 }
-@media(min-width: 850px) {
+@media(min-width: 1350px) {
     #index main .sideBar {
         transform: translateX(0);
     }
     #index .hambugger {
+        display: none;
+    }
+    #index main .sideBar .streak img:nth-child(1) {
         display: none;
     }
 }
@@ -256,7 +263,14 @@ footer .x:hover {
     padding: 5px;
     width: fit-content;
 }
-#index main .sideBar .streak img {
+#index main .sideBar .streak img:nth-child(1) {
+    width: 25px;
+    height: 25px;
+    right: 5px;
+    position: absolute;
+    cursor: pointer;
+}
+#index main .sideBar .streak .checkImg {
     width: 53px;
     height: 53px;
     position: absolute;
@@ -417,7 +431,7 @@ footer .x:hover {
 }
 #index main form .choice {
     position: relative;
-    width: 25rem;
+    width: 20rem;
 }
 #index main form .choice .check {
     position: absolute;

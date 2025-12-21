@@ -3,7 +3,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         let body = document.querySelector("body");
         let sidebarCheck = body.querySelector("#checkBugger");
         let sideBar = body.querySelector("main .sideBar");
-        let streakCheck = body.querySelector("main .sideBar .streak img");
+        const connectWallet = document.querySelector("header #connectWallet");
+        let streakCheck = body.querySelector("main .sideBar .streak .checkImg");
+        let closeSideBar = body.querySelector(".sideBar .streak img:nth-child(1)");
         let streakMonth = body.querySelector("main .sideBar .streak .month");
         let streakDay = body.querySelector("main .sideBar .streak .day");
         let streakCount = body.querySelector(".sideBar .streakCount .count span:nth-child(1)");
@@ -43,6 +45,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         let cancel = document.querySelector(".carouselCont .outcome #cancel");
         const viewSelected = document.querySelector("main .timerCont .viewTasks");
         const viewSlide = document.querySelector("main .timerCont .viewTasks + div ul");
+
+        // connect wallet
+        connectWallet.addEventListener("click", () => {
+            alert("coming soon...");
+        })
+
+        // clse sideBar
+        closeSideBar.addEventListener("click", () => {
+            if (sidebarCheck.checked == true) {
+                sidebarCheck.checked = false;
+            }
+        }) 
 
         // view selected tasks logic
         viewSelected.addEventListener("click", () => {
@@ -219,7 +233,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // send an auto api request to '/api/choosen_tasks', if the returned array is not empty, display timer countdown
         // if document.cookie includes "countDown=false" remove timer
-        if (!document.cookie.includes("countDown=false")) {
+        if (!localStorage.getItem("Countdown")) {
             try {
                 let r = await fetch("/api/choosen_tasks")
                 let data = await r.json();
@@ -254,16 +268,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return alert("You've already completed today's activities. Please come back tomorrow");
             }
 
-            setBtn.style.display="none";
-            setLoader.style.display="block";
-
             // start check in cookie declaration when user submits tasks
             midnight = new Date();
             midnight.setHours(24, 0, 0);
 
             // remove the previous countdown deadlines when a new form is subitted
             localStorage.removeItem("countDownEnd");
-            document.cookie = `checkIn=true; expires=${midnight.toUTCString()}; path=/`;
+            localStorage.removeItem("Countdown");
             streakCheck.style.display = "block";
 
             const streakDeadline = Date.now() + (48 * 3600) * 1000;
@@ -277,6 +288,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             localStorage.setItem("countDownEnd", countDownEnd);
             
             // api call (list of choosen tasks are stored in a filesystem session untill cleared)
+            setBtn.style.display="none";
+            setLoader.style.display="block";
+
             const form_data = Object.fromEntries(new FormData(form));
             try {
                 let r = await fetch("/", {
@@ -288,9 +302,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log(data.msg);
                 
                 setTimeout(() => {
-                    alert("You've successfully setup your daily tasks");
                     setBtn.style.display="block";
                     setLoader.style.display="none";
+                    alert("You've successfully setup your daily tasks");
                     countDownCont.style.display = "block";
                 }, 3000);
             }
@@ -309,7 +323,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 str = await r2.json();
 
                 streakCount.textContent = str.msg;
-                document.cookie = `currentStreak=${str.msg}`;
+                localStorage.setItem("currentStreak", str.msg);
                 if (str.msg == 1) {
                     streakCountDay.textContent = "day";
                 }
@@ -341,7 +355,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         // find and declare the currentStreak cookie value globally
-        let currentStreak = document.cookie.split("; ").find(c => c.startsWith("currentStreak="))?.split("=")[1];
+        // let currentStreak = document.cookie.split("; ").find(c => c.startsWith("currentStreak="))?.split("=")[1];
+        let currentStreak = localStorage.getItem("currentStreak");
 
         if (currentStreak) {
             streakCount.textContent = currentStreak;
@@ -388,8 +403,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             seonds = seconds < 10? '0'+seconds : seconds;
 
             if (Number(localStorage.getItem("countDownEnd")) <= Date.now()) {
-                document.cookie = "countDown=false; path=/";
-                if (document.cookie.includes("countDown=false")) {
+                localStorage.setItem("Countdown", "false");
+                if (localStorage.getItem("Countdown")) {
                     countDownCont.style.display = "none";
                 }
                 if (taskTitle.textContent != '"No tasks available"') {
