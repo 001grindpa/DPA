@@ -511,16 +511,12 @@ footer .x:hover {
         grid-template-columns: repeat(2, 1fr);
     }
 }
-/* #index main form {
-    display: none;
-} */
 #index main .noTasks {
     font-size: 70px;
     font-weight: bolder;
     text-align: center;
     width: 400px;
     margin: auto;
-    margin-bottom: 5.5rem;
     margin-top: 2rem;
     opacity: 0.5;
     display: none;

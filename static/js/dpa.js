@@ -399,7 +399,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         // countdown container logic
-        let currentHour = (new Date().getHours()) - 1;
+        let currentHour = (new Date().getHours()) - 0.4;
         let startingHour = 20 - currentHour;
 
         let time = startingHour * 3600; // get full time in seconds
