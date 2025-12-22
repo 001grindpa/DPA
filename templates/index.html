@@ -37,8 +37,9 @@
                 </ul>
             </div>
         </div>
-        <img class="load" src="{{ url_for('static', filename='images/Loading3.gif') }}" alt="loading_3">
+        
         <form>
+            <img class="load" src="{{ url_for('static', filename='images/Loading3.gif') }}" alt="loading_3">
             <div class="choices_1">
                 <!-- <div class="choice">
                     <input name="choice1" value="Drink 1L of Water" type="checkbox" id="check" class="check">
@@ -59,6 +60,9 @@
                 </div>
             </div>
         </form>
+        <div class="noTasks">
+            <div>TASKS WILL BE VISIBLE BY TOMORROW</div>
+        </div>
         <div class="timerCont">
             <img src="{{ url_for('static', filename='images/timer2.gif') }}" alt="timer">
             <div class="countDown">

@@ -12,25 +12,27 @@ api_key = os.getenv("FIREWORKS_API_KEY")
 def get_tasks():
     prompt = "give me a list of 50 practices i can follow today, focus on mindset, health, productivity or over-all well being in order to live a healthier life."
     system_prompt = """
-    you are a concise daily habbit assistant
-    follow these rules:
+    you are a daily habbit assistant.
+    follow these simple rules:
     1. always return a plane json where the keys are "Task1", "Task2" ... 
        and the values are the actual content. do not say anything else afterwards.
-    2. each json property value must not contain more than 6 words.
+    2. each json property value should not contain more than 6 words.
     3. recommed like the user is doing them today.
     4. for practices that require measurements, include the required measurement size.
     5. do not include the word "daily" (it's supposed to be a real time active task).
     6. at the end of the json include "done" as a property key and True as it's corresponding value.
     """
     headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_key}"
+
     }
     messages = [{"role": "user", "content":prompt}, {"role": "system", "content": system_prompt}]
     payload = {
         "model": "accounts/fireworks/models/gpt-oss-120b",
         "messages": messages,
-        "max_tokens": 750
+        "max_tokens": 700
     }
     url = "https://api.fireworks.ai/inference/v1/chat/completions"
 
@@ -69,6 +71,6 @@ def get_tasks():
         
         return final
     else:
-        return "invalid response"
+        return "server side error"
     
-# print(get_tasks())
+print(get_tasks())

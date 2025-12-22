@@ -15,7 +15,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    height: 100vh;
+    height: fit-content;
 }
 header {
     display: flex;
@@ -128,7 +128,7 @@ footer {
     text-align: center;
     font-size: smaller;
     line-height: 1.7;
-    margin-top: 1rem;
+    margin-top: 5rem;
 }
 footer div:nth-child(3) {
     display: flex;
@@ -150,11 +150,12 @@ footer .x:hover {
 }
 
 /* styling for index page */
+
 #index {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 100vh;
+    height: fit-content;
 }
 #index main {
     position: relative;
@@ -171,7 +172,7 @@ footer .x:hover {
     justify-content: center;
     color: white;
     background-color: var(--spBlue);
-    padding: 2px 15px;
+    padding: 4px 17px;
     border-radius: 30px;
     cursor: pointer;
     transition: 0.2s;
@@ -206,7 +207,7 @@ footer .x:hover {
 #index #checkBugger + label {
     display: block;
     position: absolute;
-    top: -54px;
+    top: -35px;
     left: 5px;
 }
 #index main .sideBar {
@@ -509,6 +510,20 @@ footer .x:hover {
     #index main form {
         grid-template-columns: repeat(2, 1fr);
     }
+}
+/* #index main form {
+    display: none;
+} */
+#index main .noTasks {
+    font-size: 70px;
+    font-weight: bolder;
+    text-align: center;
+    width: 400px;
+    margin: auto;
+    margin-bottom: 5.5rem;
+    margin-top: 2rem;
+    opacity: 0.5;
+    display: none;
 }
 #index footer {
     margin-top: 10rem;

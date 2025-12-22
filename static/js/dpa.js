@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         let streakCount = body.querySelector(".sideBar .streakCount .count span:nth-child(1)");
         let streakCountDay = body.querySelector(".sideBar .streakCount .count span:nth-child(2)");
         let form = document.querySelector("main form");
+        let noTasksCont = document.querySelector("main .noTasks");
         let count = document.querySelector("form .setCont .count span");
         let choices_1 = document.querySelector("form .choices_1");
         let choices_2 = document.querySelector("form .choices_2");
@@ -46,6 +47,30 @@ document.addEventListener("DOMContentLoaded", async () => {
         const viewSelected = document.querySelector("main .timerCont .viewTasks");
         const viewSlide = document.querySelector("main .timerCont .viewTasks + div ul");
 
+        // reset daily countdown session
+        function resetDailyCountDown() {
+            let currentHour = new Date().getHours();
+            let startingHour = 20 - currentHour;
+            let countDownEnd = Date.now() + (startingHour * (3600 * 1000));
+            localStorage.setItem("countDownEnd", countDownEnd);
+        }
+        resetDailyCountDown();
+
+        // reset UI after midnight
+        if (!localStorage.getItem("midnight")) {
+            const hr = new Date().getHours();
+            const tillMidnight = 24 - hr;
+            const midnight = Date.now() + (tillMidnight * 3600) * 1000;
+            localStorage.setItem("midnight", midnight);
+        } 
+        if (localStorage.getItem("midnight") <= Date.now()) {
+            localStorage.removeItem("Countdown");
+            localStorage.removeItem("midnight");
+        }
+        // localStorage.removeItem("Countdown");
+
+        console.log("midnight:", localStorage.getItem("midnight"), "now:", Date.now());
+
         // connect wallet
         connectWallet.addEventListener("click", () => {
             alert("coming soon...");
@@ -69,10 +94,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 viewSelected.textContent = "Hide from view";
             }
         })
-        console.log("form third api call:", localStorage.getItem("selectedTasks"));
+       
         const choosenTasks = JSON.parse(localStorage.getItem("selectedTasks")) //JSON.parse() converts str(primitive datatype) to obj
         if (choosenTasks) {
-            console.log(choosenTasks);
+            // console.log(choosenTasks);
             
             for (let i=0; i<choosenTasks.length; i++) {
                 let task = document.createElement("li");
@@ -81,7 +106,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
 
-        // strak date and check logic
+        // streak date and check logic
         let month = new Date().toLocaleString('en-US', {month: 'short'});
         streakMonth.textContent = month;
         let day = new Date().getDate();
@@ -89,11 +114,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         setBtn.disabled = true;
         
+        // cancel result container
         cancel.addEventListener("click", async () => {
             try {
                 r = await fetch("/cancel")
                 data = await r.json();
                 console.log(data.msg);
+                localStorage.removeItem("selectedTasks");
                 location.reload();
             }
             catch(error) {
@@ -249,10 +276,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // display check symbol and disable form btn on page load if user already checked in
 
-        if (localStorage.getItem("countdown")) {
+        if (localStorage.getItem("Countdown")) {
                 streakCheck.style.display = "block";
                 setBtn.style.background = "gray";
                 setBtn.disabled = true;
+                form.style.display = "none";
+                noTasksCont.style.display = "block";
             }
 
         // submit choosen tasks
@@ -261,31 +290,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.preventDefault();
 
             // remove the cookie that kepps count down off
-            document.cookie = "countDown=false; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+            // document.cookie = "countDown=false; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
 
             // if already checked in, return a message that acknowledges that
             if (document.cookie.includes("checkIn=true")) {
                 return alert("You've already completed today's activities. Please come back tomorrow");
             }
 
-            // start check in cookie declaration when user submits tasks
-            midnight = new Date();
-            midnight.setHours(24, 0, 0);
-
             // remove the previous countdown deadlines when a new form is subitted
             localStorage.removeItem("countDownEnd");
-            localStorage.removeItem("Countdown");
             streakCheck.style.display = "block";
 
             const streakDeadline = Date.now() + (48 * 3600) * 1000;
             localStorage.setItem("streakDeadline", streakDeadline);
             console.log({streakExpires: localStorage.getItem("streakDeadline")})
-
-            // reset daily countdown session
-            let currentHour = new Date().getHours();
-            let startingHour = 20 - currentHour;
-            let countDownEnd = Date.now() + (startingHour * (3600 * 1000));
-            localStorage.setItem("countDownEnd", countDownEnd);
             
             // api call (list of choosen tasks are stored in a filesystem session untill cleared)
             setBtn.style.display="none";
@@ -311,11 +329,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             catch(error) {
                 console.log({error: error});
             }
-
-            // display check symbol and disable form btn
-            streakCheck.style.display = "block";
-            setBtn.style.background = "gray";
-            setBtn.disabled = true;
 
             // get current streak
             try {
@@ -385,14 +398,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
 
+        // countdown container logic
         let currentHour = (new Date().getHours()) - 1;
         let startingHour = 20 - currentHour;
 
         let time = startingHour * 3600; // get full time in seconds
-
-        console.log({futureTimeUnix: localStorage.getItem("countDownEnd")});
-        console.log({currentTimeUnix: Date.now()});
-        console.log(document.cookie);
 
         function countDown() {
             let hour = Math.floor(time/3600);
@@ -401,17 +411,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             seconds = time % 60;
             minute = minute < 10? '0'+minute : minute;
             seonds = seconds < 10? '0'+seconds : seconds;
-
-            if (Number(localStorage.getItem("countDownEnd")) <= Date.now()) {
-                localStorage.setItem("Countdown", "false");
-                if (localStorage.getItem("Countdown")) {
-                    countDownCont.style.display = "none";
-                }
-                if (taskTitle.textContent != '"No tasks available"') {
-                    checkoutCont.style.display = "block";
-                }
-            }
-
             hr.textContent = hour;
             min.textContent = minute;
             sec.textContent = seconds;
@@ -420,6 +419,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         setInterval(() => countDown(), 1000);
 
+        // when countdown elapses
+        console.log({futureTimeUnix: localStorage.getItem("countDownEnd")});
+        console.log({currentTimeUnix: Date.now()});
+
+        if (Number(localStorage.getItem("countDownEnd")) <= Date.now()) {
+            localStorage.setItem("Countdown", "false");
+            if (localStorage.getItem("Countdown")) {
+                countDownCont.style.display = "none";
+            }
+            if (taskTitle.textContent != '"No tasks available"') {
+                checkoutCont.style.display = "block";
+            }
+        }
+
+        //
         infoImg.addEventListener("click", () => {
             if (infoCont.style.display === "none") {
                 infoCont.style.display = "block";
@@ -446,6 +460,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 r = await fetch("/api/tasks");
                 data = await r.json();
                 let tasks = data.msg;
+                if (data.msg == "invalid server response") {
+                    return alert(`${data.msg}, please refresh page`)
+                }
 
                 for (let i=0; i < 10; i++) {
                     let choice = document.createElement("div");
@@ -497,7 +514,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             
         }
-        await get_tasks();
+        if (!localStorage.getItem("Countdown")) {
+            await get_tasks();
+        }
 
         let checks = document.querySelectorAll("form .check");
 
