@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
     if (document.body.id === "index") {
+        const pageContent = document.querySelector(".content");
+        const pageLoader = document.querySelector(".loadPage");
         let body = document.querySelector("body");
         let sidebarCheck = body.querySelector("#checkBugger");
         let sideBar = body.querySelector("main .sideBar");
@@ -47,6 +49,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         const viewSelected = document.querySelector("main .timerCont .viewTasks");
         const viewSlide = document.querySelector("main .timerCont .viewTasks + div ul");
 
+        //load page logic
+        window.addEventListener("load", () => {
+            pageLoader.style.display = "none";
+            pageContent.style.display = "block";
+        })
+
         // reset daily countdown session
         function resetDailyCountDown() {
             let currentHour = new Date().getHours();
@@ -66,6 +74,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (localStorage.getItem("midnight") <= Date.now()) {
             localStorage.removeItem("Countdown");
             localStorage.removeItem("midnight");
+            localStorage.removeItem('noTasks');
         }
         // localStorage.removeItem("Countdown");
 
@@ -276,7 +285,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // display check symbol and disable form btn on page load if user already checked in
 
-        if (localStorage.getItem("Countdown")) {
+        if (localStorage.getItem("noTasks")) {
                 streakCheck.style.display = "block";
                 setBtn.style.background = "gray";
                 setBtn.disabled = true;
@@ -299,8 +308,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             // remove the previous countdown deadlines when a new form is subitted
             localStorage.removeItem("countDownEnd");
+            localStorage.removeItem("streakDeadline");
             streakCheck.style.display = "block";
 
+            // implement a streak deadline
             const streakDeadline = Date.now() + (48 * 3600) * 1000;
             localStorage.setItem("streakDeadline", streakDeadline);
             console.log({streakExpires: localStorage.getItem("streakDeadline")})
@@ -308,6 +319,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             // api call (list of choosen tasks are stored in a filesystem session untill cleared)
             setBtn.style.display="none";
             setLoader.style.display="block";
+
+            // stop tasks from reloading
+            localStorage.setItem("noTasks", "true");
 
             const form_data = Object.fromEntries(new FormData(form));
             try {
@@ -399,7 +413,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         // countdown container logic
-        let currentHour = (new Date().getHours()) - 0.4;
+        let currentHour = (new Date().getHours());
         let startingHour = 20 - currentHour;
 
         let time = startingHour * 3600; // get full time in seconds
@@ -514,7 +528,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             
         }
-        if (!localStorage.getItem("Countdown")) {
+        if (!localStorage.getItem("noTasks")) {
             await get_tasks();
         }
 

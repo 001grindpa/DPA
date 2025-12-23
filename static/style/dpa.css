@@ -157,6 +157,24 @@ footer .x:hover {
     justify-content: space-between;
     height: fit-content;
 }
+#index .loadPage {
+    width: fit-content;
+    margin: auto;
+    margin-top: 300px;
+    text-align: center;
+}
+#index .loadPage img {
+    width: 100px;
+    margin-bottom: -15px;
+}
+#index .loadPage div {
+    font-size: small;
+    font-weight: bold;
+    padding-left: 8px;
+}
+#index .content {
+    display: none;
+}
 #index main {
     position: relative;
 }
@@ -207,7 +225,7 @@ footer .x:hover {
 #index #checkBugger + label {
     display: block;
     position: absolute;
-    top: -35px;
+    top: -25px;
     left: 5px;
 }
 #index main .sideBar {

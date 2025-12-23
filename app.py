@@ -2,6 +2,7 @@ from flask import Flask, session, request, jsonify, render_template, redirect
 from flask_session import Session
 from cs50 import SQL
 import json
+import asyncio
 from organizer import get_tasks
 
 # databse integration 
@@ -38,7 +39,7 @@ def landing():
 
 @app.route("/api/tasks", methods=["POST", "GET"])
 def tasks_api():
-    tasks = get_tasks()
+    tasks = asyncio.run(get_tasks())
     return jsonify({"msg": tasks})
 
 @app.route("/api/choosen_tasks")
