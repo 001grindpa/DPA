@@ -285,7 +285,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // display check symbol and disable form btn on page load if user already checked in
 
-        if (localStorage.getItem("noTasks")) {
+        if (localStorage.getItem("noTasks") || new Date().getHours() <= 20) {
                 streakCheck.style.display = "block";
                 setBtn.style.background = "gray";
                 setBtn.disabled = true;
