@@ -308,7 +308,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             // remove the previous countdown deadlines when a new form is subitted
             localStorage.removeItem("countDownEnd");
-            localStorage.removeItem("streakDeadline");
+            if (localStorage.getItem("streakDeadline")) {
+                localStorage.removeItem("streakDeadline");
+            }
             streakCheck.style.display = "block";
 
             // implement a streak deadline
@@ -403,7 +405,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     let data = await r.json();
                     console.log(data.msg)
                     alert("You've lost your active streak");
-
+                    localStorage.removeItem("streakDeadline");
                     streakCount.textContent = "0";
                 }
                 catch(error) {

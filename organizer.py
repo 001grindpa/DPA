@@ -8,7 +8,6 @@ import json
 load_dotenv()
 api_key = os.getenv("FIREWORKS_API_KEY")
 
-# I used the prompt like this because this model does not follow regular system prompt
 async def get_tasks():
     prompt = "prompt: list 50 practices I can do today, focus on mindset, health, productivity or over-all well being to live a better life."
     system_prompt = """
