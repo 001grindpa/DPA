@@ -3,6 +3,7 @@ from flask_session import Session
 from cs50 import SQL
 import json
 import asyncio
+from datetime import timedelta
 from organizer import get_tasks
 
 # databse integration 
@@ -12,9 +13,14 @@ from organizer import get_tasks
 app = Flask(__name__)
 
 # app session(cookie) configuration
-app.config["SESSION_PERMANENT"] = False
+# app.config["SESSION_PERMANENT"] = False
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=31)
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+
+@app.before_request
+def permanent_session():
+    session.permanent = True
 
 @app.route("/", methods=["GET", "POST"])
 def index():
