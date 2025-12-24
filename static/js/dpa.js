@@ -406,6 +406,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     console.log(data.msg)
                     alert("You've lost your active streak");
                     localStorage.removeItem("streakDeadline");
+                    localStorage.removeItem("currentStreak");
                     streakCount.textContent = "0";
                 }
                 catch(error) {
