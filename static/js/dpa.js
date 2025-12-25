@@ -187,7 +187,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (localStorage.getItem("walletSignedIn") === "true") {
             // Auto-reconnect provider and contract
             const provider = new ethers.BrowserProvider(window.ethereum);
-            const signer = await provider.getSigner();
+            signer = await provider.getSigner();
             const myAddress = await signer.getAddress();
 
             contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
