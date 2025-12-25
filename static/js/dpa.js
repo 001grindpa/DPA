@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const pageContent = document.querySelector(".content");
         const pageLoader = document.querySelector(".loadPage");
         let body = document.querySelector("body");
+        const addressCont = document.querySelector("header .addressCont");
+        const address = document.querySelector("header .addressCont .address");
         let sidebarCheck = body.querySelector("#checkBugger");
         let sideBar = body.querySelector("main .sideBar");
         const connectWallet = document.querySelector("header #connectWallet");
@@ -72,20 +74,250 @@ document.addEventListener("DOMContentLoaded", async () => {
             localStorage.setItem("midnight", midnight);
         } 
         if (localStorage.getItem("midnight") <= Date.now()) {
-            localStorage.removeItem("Countdown");
             localStorage.removeItem("midnight");
             localStorage.removeItem('noTasks');
         }
-        // localStorage.removeItem("Countdown");
 
         console.log("midnight:", localStorage.getItem("midnight"), "now:", Date.now());
 
         // connect wallet
-        connectWallet.addEventListener("click", () => {
-            alert("coming soon...");
-        })
+        let signer;
+        let contract;
 
-        // clse sideBar
+        const CONTRACT_ADDRESS = "0xf1f2e1feE111Fc0B76Cbe9C11ED50F4E9A5E4e4b";
+        const CONTRACT_ABI = [ 
+        {
+            "inputs":[{"internalType":"uint256","name":"day","type":"uint256"}],
+            "name":"checkIn",
+            "outputs":[],
+            "stateMutability":"nonpayable",
+            "type":"function"
+        },
+        {
+            "inputs":[{"internalType":"uint256","name":"day","type":"uint256"}],
+            "name":"checkOut",
+            "outputs":[],
+            "stateMutability":"nonpayable",
+            "type":"function"
+        }
+        ];
+
+        connectWallet.addEventListener("click", async () => {
+            if (!window.ethereum) {
+                return alert("Please install MetaMask/OKX");
+            }
+
+            try {
+                // 1. Request wallet connection
+                await window.ethereum.request({ method: "eth_requestAccounts" });
+
+                // 2. Switch to / ensure Base Sepolia network
+                const chainId = "0x14a34"; // Base Sepolia chain ID (84532 in hex)
+                try {
+                    await window.ethereum.request({
+                        method: "wallet_switchEthereumChain",
+                        params: [{ chainId }],
+                    });
+                } catch (switchError) {
+                    if (switchError.code === 4902) {
+                        // Chain not added — add it
+                        await window.ethereum.request({
+                        method: "wallet_addEthereumChain",
+                        params: [
+                            {
+                            chainId: "0x14a34",
+                            chainName: "Base Sepolia Testnet",
+                            nativeCurrency: {
+                                name: "ETH",
+                                symbol: "ETH",
+                                decimals: 18,
+                            },
+                            rpcUrls: ["https://sepolia.base.org"],
+                            blockExplorerUrls: ["https://sepolia.basescan.org"],
+                            },
+                        ],
+                        });
+                    }
+                }
+
+                // 3. Get provider and signer
+                const provider = new ethers.BrowserProvider(window.ethereum);
+                signer = await provider.getSigner();
+                const myAddress = await signer.getAddress();
+
+                // 4. Create a clear sign-in message (this triggers MetaMask signature prompt)
+                const message = `Sign in to DPA (daily Positive Action)\n\nWallet: ${myAddress}\nDate: ${new Date().toLocaleDateString()}\nNetwork: Base Sepolia`;
+
+                // This line will pop up the MetaMask signature request
+                await signer.signMessage(message);
+
+                // 5. If we reach here → user successfully signed in
+                contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+
+                // store wallet signIn
+                localStorage.setItem("walletSignedIn", "true");
+                localStorage.setItem("userAddress", myAddress);  // optional, for UI
+
+                // Update UI to show signed-in state
+                connectWallet.style.display = "none";
+                addressCont.style.display = "block";
+                address.textContent = myAddress.substring(0, 6) + "..." + myAddress.substring(38);
+
+                console.log("Signed in with:", myAddress);
+
+                // Now your check-in button will work
+                // (Make sure it uses the same `contract` instance with signer)
+
+            }  catch (error) {
+                console.error(error);
+
+                if (error.code === 4001) {
+                    // User explicitly rejected (either accounts or signature)
+                    alert("You rejected the request. Please connect and sign to continue.");
+                } else if (error.code === -32603) {
+                    // Common during network switch issues
+                    alert("Network switch failed. Please switch to Base Sepolia manually in MetaMask.");
+                } else {
+                    alert("Connection or sign-in failed. Check console for details.");
+                }
+            }
+        });
+
+        // auto signIn
+        if (localStorage.getItem("walletSignedIn") === "true") {
+            // Auto-reconnect provider and contract
+            const provider = new ethers.BrowserProvider(window.ethereum);
+            const signer = await provider.getSigner();
+            const myAddress = await signer.getAddress();
+
+            contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+
+            // Update UI
+            connectWallet.style.display = "none";
+            addressCont.style.display = "block";
+            address.textContent = myAddress.substring(0, 6) + "..." + myAddress.substring(38);
+
+            console.log("Auto signed in:", myAddress);
+        }
+
+        // submit choosen tasks and on-chain checkIn(if wallet is connected)
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            // remove the previous countdown deadlines when a new form is subitted
+            localStorage.removeItem("Countdown");
+            localStorage.removeItem("countDownEnd");
+            if (localStorage.getItem("streakDeadline")) {
+                localStorage.removeItem("streakDeadline");
+            }
+            streakCheck.style.display = "block";
+
+            // implement a streak deadline
+            const streakDeadline = Date.now() + (48 * 3600) * 1000;
+            localStorage.setItem("streakDeadline", streakDeadline);
+            console.log({streakExpires: localStorage.getItem("streakDeadline")})
+            
+            // api call (list of choosen tasks are stored in a filesystem session untill cleared)
+            setBtn.style.display="none";
+            setLoader.style.display="block";
+
+            // stop tasks from reloading
+            localStorage.setItem("noTasks", "true");
+
+            // on-chain checkIn listener
+            if (signer && contract) {
+                try {
+                    const day = new Date().getDate();
+                    const tx = await contract.checkIn(day);
+                    await tx.wait();
+                    alert("Checked in! Tx: " + tx.hash);
+                }
+                catch (error) {
+                    return console.log({checkIn_error: error});
+                }
+            }
+
+            // server side tasks storage
+            const form_data = Object.fromEntries(new FormData(form));
+            try {
+                let r = await fetch("/", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify(form_data)
+                })
+                let data = await r.json();
+                console.log(data.msg);
+                
+                setTimeout(() => {
+                    setBtn.style.display="block";
+                    setLoader.style.display="none";
+                    alert("You've successfully setup your daily tasks");
+                    countDownCont.style.display = "block";
+                }, 3000);
+            }
+            catch(error) {
+                console.log({error: error});
+            }
+
+            // get current streak
+            try {
+                r2 = await fetch("/streak");
+                str = await r2.json();
+
+                streakCount.textContent = str.msg;
+                localStorage.setItem("currentStreak", str.msg);
+                if (str.msg == 1) {
+                    streakCountDay.textContent = "day";
+                }
+            }
+            catch(error) {
+                console.log({error: error});
+            }
+
+            // get stored selected tasks
+            try {
+                let r3 = await fetch("/api/choosen_tasks")
+                let data3 = await r3.json();
+                console.log(data.msg);
+                localStorage.setItem("selectedTasks", JSON.stringify(data3.msg));
+                if ((data.msg).length != 0) {
+                    countDownCont.style.display = "block";
+                }
+            }
+            catch(error) {
+                console.log({error: error});
+            }
+
+            const choosenTasks = JSON.parse(localStorage.getItem("selectedTasks"));
+            for (let i=0; i<choosenTasks.length; i++) {
+                let task = document.createElement("li");
+                task.textContent = choosenTasks[i];
+                viewSlide.appendChild(task);
+            }
+        });
+
+        // cancel result container and on-chain checkout(if wallet is connected)
+        cancel.addEventListener("click", async () => {
+            if (signer && contract) {
+                const day = new Date().getDate();
+                const tx = await contract.checkOut(day);
+                await tx.wait();
+                alert("Checked out! Tx: " + tx.hash);
+            }
+
+            try {
+                r = await fetch("/cancel")
+                data = await r.json();
+                console.log(data.msg);
+                localStorage.removeItem("selectedTasks");
+                location.reload();
+            }
+            catch(error) {
+                console.log({error: error});
+            }
+        });
+
+        // close sideBar
         closeSideBar.addEventListener("click", () => {
             if (sidebarCheck.checked == true) {
                 sidebarCheck.checked = false;
@@ -122,20 +354,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         streakDay.textContent = day;
 
         setBtn.disabled = true;
-        
-        // cancel result container
-        cancel.addEventListener("click", async () => {
-            try {
-                r = await fetch("/cancel")
-                data = await r.json();
-                console.log(data.msg);
-                localStorage.removeItem("selectedTasks");
-                location.reload();
-            }
-            catch(error) {
-                console.log({error: error});
-            }
-        });
 
         let gain = 0;
         let loss = 0;
@@ -292,96 +510,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 form.style.display = "none";
                 noTasksCont.style.display = "block";
             }
-
-        // submit choosen tasks
-
-        form.addEventListener("submit", async (e) => {
-            e.preventDefault();
-
-            // remove the cookie that kepps count down off
-            // document.cookie = "countDown=false; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
-
-            // if already checked in, return a message that acknowledges that
-            if (document.cookie.includes("checkIn=true")) {
-                return alert("You've already completed today's activities. Please come back tomorrow");
-            }
-
-            // remove the previous countdown deadlines when a new form is subitted
-            localStorage.removeItem("countDownEnd");
-            if (localStorage.getItem("streakDeadline")) {
-                localStorage.removeItem("streakDeadline");
-            }
-            streakCheck.style.display = "block";
-
-            // implement a streak deadline
-            const streakDeadline = Date.now() + (48 * 3600) * 1000;
-            localStorage.setItem("streakDeadline", streakDeadline);
-            console.log({streakExpires: localStorage.getItem("streakDeadline")})
-            
-            // api call (list of choosen tasks are stored in a filesystem session untill cleared)
-            setBtn.style.display="none";
-            setLoader.style.display="block";
-
-            // stop tasks from reloading
-            localStorage.setItem("noTasks", "true");
-
-            const form_data = Object.fromEntries(new FormData(form));
-            try {
-                let r = await fetch("/", {
-                    method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify(form_data)
-                })
-                let data = await r.json();
-                console.log(data.msg);
-                
-                setTimeout(() => {
-                    setBtn.style.display="block";
-                    setLoader.style.display="none";
-                    alert("You've successfully setup your daily tasks");
-                    countDownCont.style.display = "block";
-                }, 3000);
-            }
-            catch(error) {
-                console.log({error: error});
-            }
-
-            // get current streak
-            try {
-                r2 = await fetch("/streak");
-                str = await r2.json();
-
-                streakCount.textContent = str.msg;
-                localStorage.setItem("currentStreak", str.msg);
-                if (str.msg == 1) {
-                    streakCountDay.textContent = "day";
-                }
-            }
-            catch(error) {
-                console.log({error: error});
-            }
-
-            // get stored selected tasks
-            try {
-                let r3 = await fetch("/api/choosen_tasks")
-                let data3 = await r3.json();
-                console.log(data.msg);
-                localStorage.setItem("selectedTasks", JSON.stringify(data3.msg));
-                if ((data.msg).length != 0) {
-                    countDownCont.style.display = "block";
-                }
-            }
-            catch(error) {
-                console.log({error: error});
-            }
-
-            const choosenTasks = JSON.parse(localStorage.getItem("selectedTasks"));
-            for (let i=0; i<choosenTasks.length; i++) {
-                let task = document.createElement("li");
-                task.textContent = choosenTasks[i];
-                viewSlide.appendChild(task);
-            }
-        });
 
         // find and declare the currentStreak cookie value globally
         // let currentStreak = document.cookie.split("; ").find(c => c.startsWith("currentStreak="))?.split("=")[1];

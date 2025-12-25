@@ -198,6 +198,17 @@ footer .x:hover {
 #index header #connectWallet:hover {
     background-color: var(--spBlueHover);
 }
+#index header .addressCont {
+    color: var(--spBlue);
+    font-weight: bold;
+    background-color: white;
+    padding: 4px 17px;
+    border-radius: 30px;
+    display: none;
+}
+#index header .addressCont .address {
+    color: gray;
+}
 #index header div:nth-child(2) img {
     width: 30px;
 }
