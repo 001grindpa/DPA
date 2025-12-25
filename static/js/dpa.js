@@ -494,11 +494,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log(data.msg);
                 if ((data.msg).length != 0) {
                     countDownCont.style.display = "block";
+                    body.style.overflow = "hidden";
                 }
             }
             catch(error) {
                 console.log({error: error});
             }
+        } 
+        else {
+            body.style.overflow = "auto";
         }
 
         // display check symbol and disable form btn on page load if user already checked in
