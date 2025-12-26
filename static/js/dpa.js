@@ -574,17 +574,51 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         // countdown API call
-        const es = new EventSource("/countDown")
+        // const es = new EventSource("/countDown")
 
-        es.onmessage = (event) => {
-            let data = JSON.parse(event.data);
-            // console.log("Recived", data)
-            apiTime.textContent = data;
-        };
-        es.onerror = () => {
-            console.error("Connection lost");
-            es.close();
+        // es.onmessage = (event) => {
+        //     let data = JSON.parse(event.data);
+        //     // console.log("Recived", data)
+        //     apiTime.textContent = data;
+        // };
+        // es.onerror = () => {
+        //     console.error("Connection lost");
+        //     es.close();
+        // }
+        
+        // countdown API call
+        function updateCountdown() {
+        const now = new Date();
+        
+        // Target: 8 PM today
+        let target = new Date(now);
+        target.setHours(20, 0, 0, 0);  // 20:00:00.000
+        
+        // If already past 8 PM, target tomorrow
+        if (now > target) {
+            target.setDate(target.getDate() + 1);
         }
+        
+        const diff = target - now;  // milliseconds until next 8 PM
+        
+        if (diff <= 0) {
+            apiTime.innerText = '0hr 00min 00sec';
+            return;
+        }
+        
+        const hrs = Math.floor(diff / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+        
+        const display = `${hrs}hr ${mins.toString().padStart(2, '0')}min ${secs.toString().padStart(2, '0')}sec`;
+        apiTime.innerText = display;
+        }
+
+        // Update every second (very low overhead)
+        setInterval(updateCountdown, 1000);
+
+        // Initial update
+        updateCountdown();
 
         // when countdown elapses
         console.log({futureTimeUnix: localStorage.getItem("countDownEnd")});
