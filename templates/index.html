@@ -77,14 +77,17 @@
                 <img src="{{ url_for('static', filename='images/timer2.gif') }}" alt="timer">
                 <div class="countDown">
                     <div>Come back in</div>
-                    <span id="hr">0</span>hr <span id="min">0</span>min <span id="sec">0</span>sec
+                    <div class="apiTime">api_time</div>
                     <div>to check out for the day</div>
                 </div>
                 <div class="viewTasks">View selected tasks</div>
-                <div>
-                    <ul>
-                        <i><h3>Live Tasks</h3></i>
-                    </ul>
+                <div class="outerLtCont">
+                    <div id="LtCont">
+                        <ul>
+                            <i><h3>Live Tasks</h3></i>
+                        </ul>
+                        <button>Cancel Tasks</button>
+                    </div>
                 </div>
             </div>
             <div class="checkoutCont">

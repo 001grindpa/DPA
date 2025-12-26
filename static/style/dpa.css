@@ -425,25 +425,39 @@ footer .x:hover {
     background-color: gray;
     color: lightgray;
 }
-#index main .timerCont .viewTasks + div {
+#index main .timerCont .viewTasks + .outerLtCont {
     overflow: hidden;
     width: fit-content;
     margin: auto;
     padding: 8px;
 }
-#index main .timerCont .viewTasks + div ul {
-    margin-top: -125%;
+#index main .timerCont .viewTasks + .outerLtCont #LtCont {
     background-color: gray;
     color: lightgray;
+}
+#index main .timerCont .viewTasks + .outerLtCont #LtCont button {
+    margin-bottom: 10px;
+    padding: 7px 20px;
+    font-weight: bolder;
+    font-size: small;
+    border: none;
+    color: crimson;
+    cursor: pointer;
+}
+#index main .timerCont .viewTasks + .outerLtCont #LtCont button:hover {
+    background-color: lightgray;
+}
+#index main .timerCont .viewTasks + .outerLtCont #LtCont ul {
+    margin-top: -125%;
     padding: 10px;
 }
-#index main .timerCont .viewTasks + div ul h3 {
+#index main .timerCont .viewTasks + .outerLtCont #LtCont ul h3 {
     font-weight: bolder;
     color: white;
     margin-bottom: 3px;
     text-decoration: underline;
 }
-#index main .timerCont .viewTasks + div ul.slideOut {
+#index main .timerCont .viewTasks + .outerLtCont #LtCont ul.slideOut {
     animation: slideOut 1s forwards;
 }
 @keyframes slideOut {

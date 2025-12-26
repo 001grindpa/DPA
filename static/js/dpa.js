@@ -26,7 +26,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         let hr = document.querySelector(".countDown #hr");
         let min = document.querySelector(".countDown #min");
         let sec = document.querySelector(".countDown #sec");
+        let apiTime = document.querySelector(".countDown .apiTime");
         let countDownCont = document.querySelector(".timerCont");
+        const cancelTasks = document.querySelector(".outerLtCont #LtCont button");
         let setLoader = document.querySelector(".btnCont img");
         let setBtn = document.querySelector(".btnCont input");
         let checkoutCont = document.querySelector(".checkoutCont");
@@ -64,18 +66,21 @@ document.addEventListener("DOMContentLoaded", async () => {
             let countDownEnd = Date.now() + (startingHour * (3600 * 1000));
             localStorage.setItem("countDownEnd", countDownEnd);
         }
-        resetDailyCountDown();
 
         // reset UI after midnight
-        if (!localStorage.getItem("midnight")) {
-            const hr = new Date().getHours();
-            const tillMidnight = 24 - hr;
-            const midnight = Date.now() + (tillMidnight * 3600) * 1000;
-            localStorage.setItem("midnight", midnight);
-        } 
+        function setMidnight() {
+            if (!localStorage.getItem("midnight")) {
+                const hr = new Date().getHours();
+                const tillMidnight = 24 - hr;
+                const midnight = Date.now() + (tillMidnight * 3600) * 1000;
+                localStorage.setItem("midnight", midnight);
+            } 
+        }
         if (localStorage.getItem("midnight") <= Date.now()) {
             localStorage.removeItem("midnight");
             localStorage.removeItem('noTasks');
+            localStorage.setItem("countDownEnd", "0");
+            setTimeout(setMidnight, 3000);
         }
 
         console.log("midnight:", localStorage.getItem("midnight"), "now:", Date.now());
@@ -104,7 +109,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         connectWallet.addEventListener("click", async () => {
             if (!window.ethereum) {
-                return alert("Please install MetaMask/OKX");
+                return alert("Please install an EVM Wallet(MetaMask, OKX)!");
             }
 
             try {
@@ -215,6 +220,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             // implement a streak deadline
             const streakDeadline = Date.now() + (48 * 3600) * 1000;
             localStorage.setItem("streakDeadline", streakDeadline);
+            resetDailyCountDown();
             console.log({streakExpires: localStorage.getItem("streakDeadline")})
             
             // api call (list of choosen tasks are stored in a filesystem session untill cleared)
@@ -260,18 +266,21 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             // get current streak
-            try {
-                r2 = await fetch("/streak");
-                str = await r2.json();
+            if (localStorage.getItem("collectStreak") != "true") {
+                try {
+                    r2 = await fetch("/streak");
+                    str = await r2.json();
 
-                streakCount.textContent = str.msg;
-                localStorage.setItem("currentStreak", str.msg);
-                if (str.msg == 1) {
-                    streakCountDay.textContent = "day";
+                    streakCount.textContent = str.msg;
+                    localStorage.setItem("currentStreak", str.msg);
+                    localStorage.setItem("collectStreak", "true");
+                    if (str.msg == 1) {
+                        streakCountDay.textContent = "day";
+                    }
                 }
-            }
-            catch(error) {
-                console.log({error: error});
+                catch(error) {
+                    console.log({error: error});
+                }
             }
 
             // get stored selected tasks
@@ -303,6 +312,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const tx = await contract.checkOut(day);
                 await tx.wait();
                 alert("Checked out! Tx: " + tx.hash);
+                localStorage.removeItem("collectStreak");
             }
 
             try {
@@ -316,6 +326,22 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log({error: error});
             }
         });
+
+        //cancel tasks
+        cancelTasks.addEventListener("click", async () => {
+            try {
+                r = await fetch("/cancel")
+                data = await r.json();
+                console.log(data.msg);
+                localStorage.removeItem("selectedTasks");
+                localStorage.setItem("Countdown", "false");
+                localStorage.removeItem("noTasks");
+                location.reload();
+            }
+            catch(error) {
+                console.log({error: error});
+            }
+        })
 
         // close sideBar
         closeSideBar.addEventListener("click", () => {
@@ -487,7 +513,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // send an auto api request to '/api/choosen_tasks', if the returned array is not empty, display timer countdown
         // if document.cookie includes "countDown=false" remove timer
-        if (!localStorage.getItem("Countdown")) {
+        if (localStorage.getItem("Countdown") != "false") {
             try {
                 let r = await fetch("/api/choosen_tasks")
                 let data = await r.json();
@@ -507,7 +533,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // display check symbol and disable form btn on page load if user already checked in
 
-        if (localStorage.getItem("noTasks") || new Date().getHours() >= 20) {
+        if (localStorage.getItem("noTasks") == "true" || new Date().getHours() >= 20) {
                 streakCheck.style.display = "block";
                 setBtn.style.background = "gray";
                 setBtn.disabled = true;
@@ -547,26 +573,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
 
-        // countdown container logic
-        let currentHour = (new Date().getHours());
-        let startingHour = 20 - currentHour;
+        // countdown API call
+        const es = new EventSource("/countDown")
 
-        let time = startingHour * 3600; // get full time in seconds
-
-        function countDown() {
-            let hour = Math.floor(time/3600);
-            let minute = Math.floor(time/60);
-            minute = minute % 60;
-            seconds = time % 60;
-            minute = minute < 10? '0'+minute : minute;
-            seonds = seconds < 10? '0'+seconds : seconds;
-            hr.textContent = hour;
-            min.textContent = minute;
-            sec.textContent = seconds;
-
-            time--;
+        es.onmessage = (event) => {
+            let data = JSON.parse(event.data);
+            // console.log("Recived", data)
+            apiTime.textContent = data;
+        };
+        es.onerror = () => {
+            console.error("Connection lost");
+            es.close();
         }
-        setInterval(() => countDown(), 1000);
 
         // when countdown elapses
         console.log({futureTimeUnix: localStorage.getItem("countDownEnd")});
@@ -574,7 +592,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (Number(localStorage.getItem("countDownEnd")) <= Date.now()) {
             localStorage.setItem("Countdown", "false");
-            if (localStorage.getItem("Countdown")) {
+            if (localStorage.getItem("Countdown") == "false") {
                 countDownCont.style.display = "none";
             }
             if (taskTitle.textContent != '"No tasks available"') {

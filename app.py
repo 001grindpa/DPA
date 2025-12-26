@@ -1,10 +1,11 @@
-from flask import Flask, session, request, jsonify, render_template, redirect
+from flask import Flask, session, request, jsonify, render_template, redirect, Response, stream_with_context
 from flask_session import Session
 from cs50 import SQL
 import json
 import asyncio
-from datetime import timedelta
-import datetime
+from datetime import datetime, timedelta
+import time
+from tools import countDown
 from organizer import get_tasks
 
 # databse integration 
@@ -74,6 +75,38 @@ def clearStreak():
     session["days"] = None
     return jsonify({"msg": "streak cleared"})
 
+@app.route("/countDown")
+def countDownAPI():
+    now = datetime.now()
+    
+    # Set target to 8 PM today
+    target = now.replace(hour=20, minute=0, second=0, microsecond=0)
+    
+    # If current time is past 8 PM, target tomorrow's 8 PM
+    if now >= target:
+        target += timedelta(days=1)
+
+    fullTime = int((target - now).total_seconds())
+  
+    def countDown():
+        nonlocal fullTime
+        
+        while fullTime > 0:
+            hr = int(fullTime/3600)
+            min = int((fullTime % 3600)/60)
+
+            sec = fullTime % 60
+            if min < 10:
+                min = f"0{min}"
+            if sec < 10:
+                sec = f"0{sec}"
+
+            yield f"data: {json.dumps(f"{hr}hr {min}min {sec}sec")}\n\n"
+
+            time.sleep(1)
+            fullTime -= 1
+    
+    return Response(stream_with_context(countDown()), mimetype="text/event-stream")
 
 if "__name__" == "__main__":
     app.run(port=8080, use_reloader=True, debug=True, reloader_type="watchdog")
