@@ -14,7 +14,7 @@ contract Habits {
     }
 
     function checkOut(uint day) public {
-        require(checkedIn[msg.sender][day], "Not checked in yet");
+        // require(checkedIn[msg.sender][day], "Not checked in yet");
         checkedOut[msg.sender][day] = true;
         emit CheckOut(msg.sender, day);
     }

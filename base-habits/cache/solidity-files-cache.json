@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/grindpa/code/repos/DPA/base-habits/contracts/Habits.sol": {
-      "lastModificationDate": 1766603371630,
-      "contentHash": "91384dfedf275d1f7daf4a1ec4827f4e",
+      "lastModificationDate": 1766922572327,
+      "contentHash": "1d0d2ae6f3b5b727f873a6b33d8d4b29",
       "sourceName": "contracts/Habits.sol",
       "solcConfig": {
         "version": "0.8.8",
