@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         let signer;
         let contract;
 
-        const CONTRACT_ADDRESS = "0xf1f2e1feE111Fc0B76Cbe9C11ED50F4E9A5E4e4b";
+        const CONTRACT_ADDRESS = "0x1Fe3b83aCB54F15B5d6A0227D9Dd131F505f813E";
         const CONTRACT_ABI = [ 
         {
             "inputs":[{"internalType":"uint256","name":"day","type":"uint256"}],
@@ -209,26 +209,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            // remove the previous countdown deadlines when a new form is subitted
-            localStorage.removeItem("Countdown");
-            localStorage.removeItem("countDownEnd");
-            if (localStorage.getItem("streakDeadline")) {
-                localStorage.removeItem("streakDeadline");
-            }
-            streakCheck.style.display = "block";
-
-            // implement a streak deadline
-            const streakDeadline = Date.now() + (48 * 3600) * 1000;
-            localStorage.setItem("streakDeadline", streakDeadline);
-            resetDailyCountDown();
-            console.log({streakExpires: localStorage.getItem("streakDeadline")})
-            
-            // api call (list of choosen tasks are stored in a filesystem session untill cleared)
             setBtn.style.display="none";
             setLoader.style.display="block";
-
-            // stop tasks from reloading
-            localStorage.setItem("noTasks", "true");
 
             // on-chain checkIn listener
             if (signer && contract) {
@@ -242,6 +224,23 @@ document.addEventListener("DOMContentLoaded", async () => {
                     return console.log({checkIn_error: error});
                 }
             }
+
+            // remove the previous countdown deadlines when a new form is subitted
+            localStorage.removeItem("Countdown");
+            localStorage.removeItem("countDownEnd");
+            if (localStorage.getItem("streakDeadline")) {
+                localStorage.removeItem("streakDeadline");
+            }
+            streakCheck.style.display = "block";
+
+            // implement a streak deadline
+            const streakDeadline = Date.now() + (48 * 3600) * 1000;
+            localStorage.setItem("streakDeadline", streakDeadline);
+            resetDailyCountDown();
+            console.log({streakExpires: localStorage.getItem("streakDeadline")})
+
+            // stop tasks from reloading
+            localStorage.setItem("noTasks", "true");
 
             // server side tasks storage
             const form_data = Object.fromEntries(new FormData(form));
@@ -259,7 +258,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     setLoader.style.display="none";
                     alert("You've successfully setup your daily tasks");
                     countDownCont.style.display = "block";
-                }, 3000);
+                }, 2000);
             }
             catch(error) {
                 console.log({error: error});
