@@ -90,7 +90,7 @@ def farcaster_manifest():
         "miniapp": {
             "version": "1",
             "name": "Daily Positive Actions",
-            "subtitle": "Become Progressively Better daily.",
+            "subtitle": "Become Better each day.",
             "description": """DPA helps you build consistency through small, meaningful habits. 
             Each day, choose up to 20 positive tasks, commit, and check them off at night (8 pm).""",
             "iconUrl": "https://dpa.r2-w3.fun/static/images/dpa_logo.jpeg",  # absolute URL, must load
