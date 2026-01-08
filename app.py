@@ -83,9 +83,9 @@ def farcaster_manifest():
 
     manifest = {
         "accountAssociation": {
-            "header": "your_header_here", 
-            "payload": "your_payload_here",
-            "signature": "your_signature_here"
+            "header": "eyJmaWQiOjQ1NDYxMSwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweDNmRmQyMWQ5MDYwZEJDYTVGNDFBODNCOERlYzg5Q2VFQTJENGQ1YTMifQ",
+            "payload": "eyJkb21haW4iOiJkcGEucjItdzMuZnVuIn0",
+            "signature": "03WbDeuRYETbC9pdlvT3VYR8kB44yw+Mmt0cDovjaYhdMGvpHAG7SejVoQ1+/UPoK27yPljbIzfRwaVPLSekVRs="
         },
         "miniapp": {
             "version": "1",
