@@ -75,38 +75,65 @@ def clearStreak():
     session["days"] = None
     return jsonify({"msg": "streak cleared"})
 
-@app.route("/countDown")
-def countDownAPI():
-    now = datetime.now()
-    
-    # Set target to 8 PM today
-    target = now.replace(hour=20, minute=0, second=0, microsecond=0)
-    
-    # If current time is past 8 PM, target tomorrow's 8 PM
-    if now >= target:
-        target += timedelta(days=1)
+@app.route('/.well-known/farcaster.json')
+def farcaster_manifest():
+    # Allow only GET requests
+    if request.method != 'GET':
+        return '', 404
 
-    fullTime = int((target - now).total_seconds())
+    manifest = {
+        "accountAssociation": {
+            "header": "your_header_here", 
+            "payload": "your_payload_here",
+            "signature": "your_signature_here"
+        },
+        "miniapp": {
+            "version": "1",
+            "name": "Daily Positive Actions",
+            "subtitle": "We Help You Become Progressively Better.",
+            "description": """DPA is a personal growth app designed to help you build consistency through small, meaningful habits. 
+            Each day, the app presents you with a fresh list of 20 positive tasks to choose from. 
+            You simply choose the actions you want to commit to for the day, and return at night (8pm) to check them off.""",
+            "iconUrl": "https://dpa.r2-w3.fun/static/images/dpa_logo.jpeg",  # absolute URL, must load
+            "homeUrl": "https://dpa.r2-w3.fun/",
+            # add other fields like screenshotUrls, etc. if you want
+            # optional: webhookUrl if using notifications
+        }
+    }
+    return jsonify(manifest)
+
+# @app.route("/countDown")
+# def countDownAPI():
+#     now = datetime.now()
+    
+#     # Set target to 8 PM today
+#     target = now.replace(hour=20, minute=0, second=0, microsecond=0)
+    
+#     # If current time is past 8 PM, target tomorrow's 8 PM
+#     if now >= target:
+#         target += timedelta(days=1)
+
+#     fullTime = int((target - now).total_seconds())
   
-    def countDown():
-        nonlocal fullTime
+#     def countDown():
+#         nonlocal fullTime
         
-        while fullTime > 0:
-            hr = int(fullTime/3600)
-            min = int((fullTime % 3600)/60)
+#         while fullTime > 0:
+#             hr = int(fullTime/3600)
+#             min = int((fullTime % 3600)/60)
 
-            sec = fullTime % 60
-            if min < 10:
-                min = f"0{min}"
-            if sec < 10:
-                sec = f"0{sec}"
+#             sec = fullTime % 60
+#             if min < 10:
+#                 min = f"0{min}"
+#             if sec < 10:
+#                 sec = f"0{sec}"
 
-            yield f"data: {json.dumps(f"{hr}hr {min}min {sec}sec")}\n\n"
+#             yield f"data: {json.dumps(f"{hr}hr {min}min {sec}sec")}\n\n"
 
-            time.sleep(1)
-            fullTime -= 1
+#             time.sleep(1)
+#             fullTime -= 1
     
-    return Response(stream_with_context(countDown()), mimetype="text/event-stream")
+#     return Response(stream_with_context(countDown()), mimetype="text/event-stream")
 
 if __name__ == "__main__":
     app.run(port=8080, use_reloader=True, debug=True, reloader_type="watchdog")
