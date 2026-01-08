@@ -90,10 +90,9 @@ def farcaster_manifest():
         "miniapp": {
             "version": "1",
             "name": "Daily Positive Actions",
-            "subtitle": "We Help You Become Progressively Better.",
-            "description": """DPA is a personal growth app designed to help you build consistency through small, meaningful habits. 
-            Each day, the app presents you with a fresh list of 20 positive tasks to choose from. 
-            You simply choose the actions you want to commit to for the day, and return at night (8pm) to check them off.""",
+            "subtitle": "Become Progressively Better daily.",
+            "description": """DPA helps you build consistency through small, meaningful habits. 
+            Each day, choose up to 20 positive tasks, commit, and check them off at night (8 pm).""",
             "iconUrl": "https://dpa.r2-w3.fun/static/images/dpa_logo.jpeg",  # absolute URL, must load
             "homeUrl": "https://dpa.r2-w3.fun/",
             # add other fields like screenshotUrls, etc. if you want
