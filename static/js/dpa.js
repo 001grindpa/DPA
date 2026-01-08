@@ -52,6 +52,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         let cancel = document.querySelector(".carouselCont .outcome #cancel");
         const viewSelected = document.querySelector("main .timerCont .viewTasks");
         const viewSlide = document.querySelector("main .timerCont .viewTasks + div ul");
+        const note = document.querySelector("#note");
+
+        note.style.fontSize = "small";
+        note.style.color = "white";
 
         //load page logic
         window.addEventListener("load", () => {
@@ -264,31 +268,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log({error: error});
             }
 
-            // get current streak
-            if (localStorage.getItem("collectStreak") != "true") {
-                try {
-                    r2 = await fetch("/streak");
-                    str = await r2.json();
-
-                    streakCount.textContent = str.msg;
-                    localStorage.setItem("currentStreak", str.msg);
-                    localStorage.setItem("collectStreak", "true");
-                    if (str.msg == 1) {
-                        streakCountDay.textContent = "day";
-                    }
-                }
-                catch(error) {
-                    console.log({error: error});
-                }
-            }
-
             // get stored selected tasks
             try {
                 let r3 = await fetch("/api/choosen_tasks")
                 let data3 = await r3.json();
-                console.log(data.msg);
+                console.log(data3.msg);
                 localStorage.setItem("selectedTasks", JSON.stringify(data3.msg));
-                if ((data.msg).length != 0) {
+                if ((data3.msg).length != 0) {
                     countDownCont.style.display = "block";
                 }
             }
@@ -324,7 +310,56 @@ document.addEventListener("DOMContentLoaded", async () => {
             catch(error) {
                 console.log({error: error});
             }
+
+            // asssign current streak
+            if (localStorage.getItem("collectStreak") != "true") {
+                try {
+                    r2 = await fetch("/streak");
+                    str = await r2.json();
+                    streakCount.textContent = str.msg;
+                    localStorage.setItem("currentStreak", str.msg);
+                    localStorage.setItem("collectStreak", "true");
+                    if (str.msg == 1) {
+                        streakCountDay.textContent = "day";
+                    }
+                }
+                catch(error) {
+                    console.log({error: error});
+                }
+            }
         });
+        // localStorage.removeItem("collectStreak");
+
+        // display current streak after page refresh
+        let currentStreak = localStorage.getItem("currentStreak");
+        if (currentStreak) {
+            streakCount.textContent = currentStreak;
+            if (currentStreak == 1) {
+                streakCountDay.textContent = "day";
+            }
+        }
+        else {
+            streakCount.textContent = "0";
+        }
+
+        // reset streak
+        console.log({"streak expires in": localStorage.getItem("streakDeadline")})
+        if (localStorage.getItem("streakDeadline")) {
+            if (localStorage.getItem("streakDeadline") <= Date.now()) {
+                try {
+                    let r = await fetch("/clearStreak");
+                    let data = await r.json();
+                    console.log(data.msg);
+                    alert("You've lost your active streak");
+                    localStorage.removeItem("streakDeadline");
+                    localStorage.removeItem("currentStreak");
+                    streakCount.textContent = "0";
+                }
+                catch(error) {
+                    console.log({error: error})
+                }
+            }
+        }
 
         //cancel tasks
         cancelTasks.addEventListener("click", async () => {
@@ -540,38 +575,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 noTasksCont.style.display = "block";
             }
 
-        // find and declare the currentStreak cookie value globally
-        // let currentStreak = document.cookie.split("; ").find(c => c.startsWith("currentStreak="))?.split("=")[1];
-        let currentStreak = localStorage.getItem("currentStreak");
-
-        if (currentStreak) {
-            streakCount.textContent = currentStreak;
-            if (currentStreak == 1) {
-                streakCountDay.textContent = "day";
-            }
-        }
-        else {
-            streakCount.textContent = "0";
-        }
-        // reset streak
-        console.log({"streak expires in": localStorage.getItem("streakDeadline")})
-        if (localStorage.getItem("streakDeadline")) {
-            if (localStorage.getItem("streakDeadline") <= Date.now()) {
-                try {
-                    let r = await fetch("/clearStreak");
-                    let data = await r.json();
-                    console.log(data.msg)
-                    alert("You've lost your active streak");
-                    localStorage.removeItem("streakDeadline");
-                    localStorage.removeItem("currentStreak");
-                    streakCount.textContent = "0";
-                }
-                catch(error) {
-                    console.log({error: error})
-                }
-            }
-        }
-
         // countdown API call
         // const es = new EventSource("/countDown")
 
@@ -587,30 +590,30 @@ document.addEventListener("DOMContentLoaded", async () => {
         
         // countdown API call
         function updateCountdown() {
-        const now = new Date();
-        
-        // Target: 8 PM today
-        let target = new Date(now);
-        target.setHours(20, 0, 0, 0);  // 20:00:00.000
-        
-        // If already past 8 PM, target tomorrow
-        if (now > target) {
-            target.setDate(target.getDate() + 1);
-        }
-        
-        const diff = target - now;  // milliseconds until next 8 PM
-        
-        if (diff <= 0) {
-            apiTime.innerText = '0hr 00min 00sec';
-            return;
-        }
-        
-        const hrs = Math.floor(diff / (1000 * 60 * 60));
-        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const secs = Math.floor((diff % (1000 * 60)) / 1000);
-        
-        const display = `${hrs}hr ${mins.toString().padStart(2, '0')}min ${secs.toString().padStart(2, '0')}sec`;
-        apiTime.innerText = display;
+            const now = new Date();
+            
+            // Target: 8 PM today
+            let target = new Date(now);
+            target.setHours(20, 0, 0, 0);  // 20:00:00.000
+            
+            // If already past 8 PM, target tomorrow
+            if (now > target) {
+                target.setDate(target.getDate() + 1);
+            }
+            
+            const diff = target - now;  // milliseconds until next 8 PM
+            
+            if (diff <= 0) {
+                apiTime.innerText = '0hr 00min 00sec';
+                return;
+            }
+            
+            const hrs = Math.floor(diff / (1000 * 60 * 60));
+            const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const secs = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            const display = `${hrs}hr ${mins.toString().padStart(2, '0')}min ${secs.toString().padStart(2, '0')}sec`;
+            apiTime.innerText = display;
         }
 
         // Update every second (very low overhead)

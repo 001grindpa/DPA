@@ -108,5 +108,5 @@ def countDownAPI():
     
     return Response(stream_with_context(countDown()), mimetype="text/event-stream")
 
-if "__name__" == "__main__":
+if __name__ == "__main__":
     app.run(port=8080, use_reloader=True, debug=True, reloader_type="watchdog")
