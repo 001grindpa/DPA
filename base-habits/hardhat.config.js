@@ -11,5 +11,11 @@ export default {
       url: process.env.BASE_SEPOLIA_RPC_URL || "",
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],  // Better as array even for one key
     },
+    base_mainnet: {
+      url: "https://mainnet.base.org",
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 8453,
+      gasPrice: 100000000,
+    },
   },
 };

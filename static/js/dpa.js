@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         let signer;
         let contract;
 
-        const CONTRACT_ADDRESS = "0x1Fe3b83aCB54F15B5d6A0227D9Dd131F505f813E";
+        const CONTRACT_ADDRESS = "0x53678c5b8e349030f3614DeEf578469661eD0b74";
         const CONTRACT_ABI = [ 
         {
             "inputs":[{"internalType":"uint256","name":"day","type":"uint256"}],
@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 await window.ethereum.request({ method: "eth_requestAccounts" });
 
                 // 2. Switch to / ensure Base Sepolia network
-                const chainId = "0x14a34"; // Base Sepolia chain ID (84532 in hex)
+                const chainId = "0x2105"; // Base mainnet chain ID (8453 in hex)
                 try {
                     await window.ethereum.request({
                         method: "wallet_switchEthereumChain",
@@ -134,15 +134,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                         method: "wallet_addEthereumChain",
                         params: [
                             {
-                            chainId: "0x14a34",
-                            chainName: "Base Sepolia Testnet",
-                            nativeCurrency: {
-                                name: "ETH",
-                                symbol: "ETH",
-                                decimals: 18,
-                            },
-                            rpcUrls: ["https://sepolia.base.org"],
-                            blockExplorerUrls: ["https://sepolia.basescan.org"],
+                                chainId: "0x2105",  // Hex for 8453
+                                chainName: "Base Mainnet",
+                                nativeCurrency: {
+                                    name: "ETH",
+                                    symbol: "ETH",
+                                    decimals: 18,
+                                },
+                                rpcUrls: ["https://mainnet.base.org"],
+                                blockExplorerUrls: ["https://basescan.org"],
                             },
                         ],
                         });
@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const myAddress = await signer.getAddress();
 
                 // 4. Create a clear sign-in message (this triggers MetaMask signature prompt)
-                const message = `Sign in to DPA (daily Positive Action)\n\nWallet: ${myAddress}\nDate: ${new Date().toLocaleDateString()}\nNetwork: Base Sepolia`;
+                const message = `Sign in to DPA (daily Positive Action)\n\nWallet: ${myAddress}\nDate: ${new Date().toLocaleDateString()}\nNetwork: Base Mainnet`;
 
                 // This line will pop up the MetaMask signature request
                 await signer.signMessage(message);
@@ -173,9 +173,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 address.textContent = myAddress.substring(0, 6) + "..." + myAddress.substring(38);
 
                 console.log("Signed in with:", myAddress);
-
-                // Now your check-in button will work
-                // (Make sure it uses the same `contract` instance with signer)
 
             }  catch (error) {
                 console.error(error);
