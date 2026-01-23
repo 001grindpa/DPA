@@ -4,7 +4,8 @@ async function main() {
 
   await contract.waitForDeployment();  // ← Correct way in ethers v6
 
-  console.log("Habits deployed to:", await contract.getAddress());
+  // console.log("Habits deployed to:", await contract.getAddress());
+  console.log(await contract.getAddress());
 }
 
 main().catch((error) => {

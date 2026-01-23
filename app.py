@@ -1,15 +1,18 @@
 from flask import Flask, session, request, jsonify, render_template, redirect, Response, stream_with_context
 from flask_session import Session
+from flask_apscheduler import APScheduler
 from cs50 import SQL
 import json
 import asyncio
 from datetime import datetime, timedelta
 import time
+import os
 from tools import countDown
+import subprocess
 from organizer import get_tasks
 
 # databse integration 
-# db = SQL("sqlite:///dpa.db")
+db = SQL("sqlite:///dpa.db")
 
 # app declaration
 app = Flask(__name__)
@@ -20,9 +23,36 @@ app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=31)
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+scheduler = APScheduler()
+scheduler.init_app(app)
+scheduler.start()
+
 @app.before_request
 def permanent_session():
     session.permanent = True
+
+# deploy smart contract after midnight and store it in a database
+# current_dir = os.getcwd()
+# habits_path = os.path.join(current_dir, "base-habits")
+
+def deploy_contract():
+    try:
+        result = subprocess.check_output (
+            ["npx", "hardhat", "run", "scripts/deploy.js", "--network", "base_mainnet"], 
+            cwd="base-habits", 
+            timeout=200,
+            # stderr=subprocess.STDOUT
+        )
+        data = result.decode().strip()
+        db.execute("INSERT INTO contracts(contract) VALUES(?)", data)
+    except subprocess.CalledProcessError as e:
+        print(f"Hardhat error: {e.output.decode()}")
+
+@scheduler.task("cron", id="do_deploy", hour=23, minute=0)
+def schedule_deploy():
+    with app.app_context():
+        deploy_contract()
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -74,6 +104,13 @@ def streak():
 def clearStreak():
     session["days"] = None
     return jsonify({"msg": "streak cleared"})
+
+@app.route("/get_contract")
+def get_contract():
+    contracts = db.execute("SELECT * FROM contracts ORDER BY id DESC LIMIT 1")
+    for data in contracts:
+        new_contract = data.get("contract")
+    return jsonify({"msg": new_contract})
 
 @app.route('/.well-known/farcaster.json')
 def farcaster_manifest():

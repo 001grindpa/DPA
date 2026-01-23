@@ -83,6 +83,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (localStorage.getItem("midnight") <= Date.now()) {
             localStorage.removeItem("midnight");
             localStorage.removeItem('noTasks');
+            localStorage.removeItem("new_contract");
             localStorage.setItem("countDownEnd", "0");
             setTimeout(setMidnight, 3000);
         }
@@ -92,8 +93,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         // connect wallet
         let signer;
         let contract;
+        let CONTRACT_ADDRESS;
 
-        const CONTRACT_ADDRESS = "0x53678c5b8e349030f3614DeEf578469661eD0b74";
+        // get newly deployed contract after midnight 
+        async function get_contract() {
+            try {
+                let r = await fetch("/get_contract")
+                let d = await r.json();
+                localStorage.setItem("new_contract", d.msg);
+                console.log("new contract received")
+            }
+            catch(error) {
+                console.log("Unexpcted error: " + error)
+            }
+        }
+        if (!localStorage.getItem("new_contract")) {
+            await get_contract();
+        }
+        console.log("New Contract: " + localStorage.getItem("new_contract"));
+        CONTRACT_ADDRESS = localStorage.getItem("new_contract") || "0xFCBea955Bf638C13fc3C02E66CcBE14157E044Fc";
         const CONTRACT_ABI = [ 
         {
             "inputs":[{"internalType":"uint256","name":"day","type":"uint256"}],
