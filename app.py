@@ -20,6 +20,7 @@ app = Flask(__name__)
 # app session(cookie) configuration
 # app.config["SESSION_PERMANENT"] = False
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=31)
+app.config["SCHEDULER_TIMEZONE"] = "Africa/Lagos"
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
@@ -48,7 +49,7 @@ def deploy_contract():
     except subprocess.CalledProcessError as e:
         print(f"Hardhat error: {e.output.decode()}")
 
-@scheduler.task("cron", id="do_deploy", hour=23, minute=0)
+@scheduler.task("cron", id="do_deploy", hour=22, minute=0)
 def schedule_deploy():
     with app.app_context():
         deploy_contract()
