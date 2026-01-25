@@ -49,7 +49,7 @@ def deploy_contract():
     except subprocess.CalledProcessError as e:
         print(f"Hardhat error: {e.output.decode()}")
 
-@scheduler.task("cron", id="do_deploy", hour=22, minute=0)
+@scheduler.task("cron", id="do_deploy", hour=22, minute=0, day="*")
 def schedule_deploy():
     with app.app_context():
         deploy_contract()
