@@ -110,8 +110,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!localStorage.getItem("new_contract")) {
             await get_contract();
         }
-        console.log("New Contract: " + localStorage.getItem("new_contract"));
+
         CONTRACT_ADDRESS = localStorage.getItem("new_contract") || "0xFCBea955Bf638C13fc3C02E66CcBE14157E044Fc";
+        console.log("New Contract: " + CONTRACT_ADDRESS);
         const CONTRACT_ABI = [ 
         {
             "inputs":[{"internalType":"uint256","name":"day","type":"uint256"}],

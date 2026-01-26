@@ -25,6 +25,8 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 scheduler = APScheduler()
+scheduler.api_enabled = True
+scheduler.scheduler.timezone = "Africa/Lagos"
 scheduler.init_app(app)
 scheduler.start()
 
@@ -32,7 +34,7 @@ scheduler.start()
 def permanent_session():
     session.permanent = True
 
-# deploy smart contract after midnight and store it in a database
+# deploy smart contract before midnight and store it in a database
 # current_dir = os.getcwd()
 # habits_path = os.path.join(current_dir, "base-habits")
 
