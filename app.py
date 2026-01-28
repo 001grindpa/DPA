@@ -5,8 +5,7 @@ from cs50 import SQL
 import json
 import asyncio
 from datetime import datetime, timedelta
-import time
-import os
+import pytz
 from tools import countDown
 import subprocess
 from organizer import get_tasks
@@ -18,15 +17,15 @@ db = SQL("sqlite:///dpa.db")
 app = Flask(__name__)
 
 # app session(cookie) configuration
-# app.config["SESSION_PERMANENT"] = False
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=31)
 app.config["SCHEDULER_TIMEZONE"] = "Africa/Lagos"
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+WAT = pytz.timezone("Africa/Lagos")
+
 scheduler = APScheduler()
 scheduler.api_enabled = True
-scheduler.scheduler.timezone = "Africa/Lagos"
 scheduler.init_app(app)
 scheduler.start()
 
@@ -51,11 +50,22 @@ def deploy_contract():
     except subprocess.CalledProcessError as e:
         print(f"Hardhat error: {e.output.decode()}")
 
-@scheduler.task("cron", id="do_deploy", hour=22, minute=0, day="*")
-def schedule_deploy():
-    with app.app_context():
-        deploy_contract()
+last_run_time = None
 
+# auto deploy contract at 10pm
+@scheduler.task("interval", id="do_deploy", seconds=60, timezone="Africa/Lagos", misfire_grace_time=60)
+def schedule_deploy():
+    global last_run_time
+    now = datetime.now(WAT)
+    today = now.date()
+
+    if now.hour == 14 and last_run_time != today:
+        try:
+            with app.app_context():
+                deploy_contract()
+            last_run_time = today
+        except Exception as e:
+            print(f"Unexpected error: {str(e)}")
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -174,5 +184,5 @@ def farcaster_manifest():
     
 #     return Response(stream_with_context(countDown()), mimetype="text/event-stream")
 
-if __name__ == "__main__":
-    app.run(port=8080, use_reloader=True, debug=True, reloader_type="watchdog")
+# if __name__ == "__main__":
+#     app.run(port=8080, use_reloader=True, debug=True, reloader_type="watchdog")
