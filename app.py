@@ -59,7 +59,7 @@ def schedule_deploy():
     now = datetime.now(WAT)
     today = now.date()
 
-    if now.hour == 14 and last_run_time != today:
+    if now.hour == 22 and last_run_time != today:
         try:
             with app.app_context():
                 deploy_contract()
