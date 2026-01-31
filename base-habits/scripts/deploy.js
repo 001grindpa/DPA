@@ -1,5 +1,5 @@
 async function main() {
-  const Habits = await ethers.getContractFactory("Habits");  // Replace with your contract name
+  const Habits = await ethers.getContractFactory("Habits");
   const contract = await Habits.deploy();                   // Deploy
 
   await contract.waitForDeployment();  // ← Correct way in ethers v6
