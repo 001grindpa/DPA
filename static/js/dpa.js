@@ -593,13 +593,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // display check symbol and disable form btn on page load if user already checked in
 
-        // if (localStorage.getItem("noTasks") == "true" || new Date().getHours() >= 20) {
-        //         streakCheck.style.display = "block";
-        //         setBtn.style.background = "gray";
-        //         setBtn.disabled = true;
-        //         form.style.display = "none";
-        //         noTasksCont.style.display = "block";
-        //     }
+        if (localStorage.getItem("noTasks") == "true" || new Date().getHours() >= 20) {
+                streakCheck.style.display = "block";
+                setBtn.style.background = "gray";
+                setBtn.disabled = true;
+                form.style.display = "none";
+                noTasksCont.style.display = "block";
+            }
 
         // countdown API call
         // const es = new EventSource("/countDown")
@@ -743,10 +743,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             
         }
-        // if (!localStorage.getItem("noTasks")) {
-        //     await get_tasks();
-        // }
-        await get_tasks();
+        if (!localStorage.getItem("noTasks")) {
+            await get_tasks();
+        }
+        // await get_tasks();
 
         let checks = document.querySelectorAll("form .check");
 
