@@ -684,7 +684,7 @@ footer .x:hover {
     transform: translateX(-50%);
     background-color: lightblue;
     width: 26rem;
-    height: 20rem;
+    height: 22rem;
     padding: 10px;
     border-radius: 20px;
     display: none;
@@ -716,10 +716,28 @@ footer .x:hover {
     display: none;
 }
 #index .checkoutCont .carouselCont .outcome #cancel {
-    width: 50px;
-    height: 50px;
-    position: absolute;
-    top: 5px;
-    right: 5px;
+    margin: auto;
+    margin-top: 12px;
+    padding: 12px 35px;
+    border-radius: 8px;
+    outline: none;
+    border: none;
+    background-color: green;
+    color: lightgreen;
+    font-weight: bold;
     cursor: pointer;
+    transition: 0.25s;
+    width: 150px;
+    /* display: flex; */
+    align-items: center;
+    justify-content: center;
+    display: none;
+}
+#index .checkoutCont .carouselCont .outcome #cancel:hover {
+    background-color: rgb(0, 160, 0);
+}
+#index .checkoutCont .carouselCont .outcome #cancel img {
+    width: 70px;
+    display: none;
+    margin: -10px;
 }

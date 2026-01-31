@@ -53,6 +53,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const viewSelected = document.querySelector("main .timerCont .viewTasks");
         const viewSlide = document.querySelector("main .timerCont .viewTasks + div ul");
         const note = document.querySelector("#note");
+        const checkoutText = document.querySelector("#index .checkoutCont .carouselCont .outcome #cancel h4");
+        const checkoutLoader = document.querySelector("#index .checkoutCont .carouselCont .outcome #cancel img");
 
         note.style.fontSize = "small";
         note.style.color = "white";
@@ -81,9 +83,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             } 
         }
         if (localStorage.getItem("midnight") <= Date.now()) {
+            // localStorage.removeItem("new_contract");
             localStorage.removeItem("midnight");
             localStorage.removeItem('noTasks');
-            localStorage.removeItem("new_contract");
             localStorage.setItem("countDownEnd", "0");
             setTimeout(setMidnight, 3000);
         }
@@ -95,21 +97,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         let contract;
         let CONTRACT_ADDRESS;
 
-        // get newly deployed contract after midnight 
+        // get newly deployed contract 
         async function get_contract() {
             try {
                 let r = await fetch("/get_contract")
                 let d = await r.json();
-                localStorage.setItem("new_contract", d.msg);
-                console.log("new contract received")
+                // localStorage.setItem("new_contract", d.msg);
+                // console.log("new contract received")
             }
             catch(error) {
                 console.log("Unexpcted error: " + error)
             }
         }
-        if (!localStorage.getItem("new_contract")) {
-            await get_contract();
-        }
+        await get_contract();
+        // if (!localStorage.getItem("new_contract")) {
+        //     await get_contract();
+        // }
 
         CONTRACT_ADDRESS = localStorage.getItem("new_contract") || "0xFCBea955Bf638C13fc3C02E66CcBE14157E044Fc";
         console.log("New Contract: " + CONTRACT_ADDRESS);
@@ -308,6 +311,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // cancel result container and on-chain checkout(if wallet is connected)
         cancel.addEventListener("click", async () => {
+            checkoutText.style.display = "none";
+            checkoutLoader.style.display = "block";
             if (signer && contract) {
                 const day = new Date().getDate();
                 const tx = await contract.checkOut(day);
@@ -321,7 +326,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 data = await r.json();
                 console.log(data.msg);
                 localStorage.removeItem("selectedTasks");
-                location.reload();
+                setTimeout(() => {
+                    checkoutLoader.style.display = "none";
+                    checkoutText.style.display = "block";
+                    location.reload();
+                }, 2000)
             }
             catch(error) {
                 console.log({error: error});
@@ -509,6 +518,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     perform.textContent = comment;
                     outcomeLoader.style.display="none";
                     precentCont.style.display="block";
+                    cancel.style.display="flex";
                     if (percent.textContent == "100") {
                         confettiPop.play();
                         confetti.style.display="block";
@@ -583,13 +593,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // display check symbol and disable form btn on page load if user already checked in
 
-        if (localStorage.getItem("noTasks") == "true" || new Date().getHours() >= 20) {
-                streakCheck.style.display = "block";
-                setBtn.style.background = "gray";
-                setBtn.disabled = true;
-                form.style.display = "none";
-                noTasksCont.style.display = "block";
-            }
+        // if (localStorage.getItem("noTasks") == "true" || new Date().getHours() >= 20) {
+        //         streakCheck.style.display = "block";
+        //         setBtn.style.background = "gray";
+        //         setBtn.disabled = true;
+        //         form.style.display = "none";
+        //         noTasksCont.style.display = "block";
+        //     }
 
         // countdown API call
         // const es = new EventSource("/countDown")
@@ -733,9 +743,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             
         }
-        if (!localStorage.getItem("noTasks")) {
-            await get_tasks();
-        }
+        // if (!localStorage.getItem("noTasks")) {
+        //     await get_tasks();
+        // }
+        await get_tasks();
 
         let checks = document.querySelectorAll("form .check");
 
