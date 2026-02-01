@@ -102,6 +102,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             try {
                 let r = await fetch("/get_contract")
                 let d = await r.json();
+                return d.msg
                 // localStorage.setItem("new_contract", d.msg);
                 // console.log("new contract received")
             }
@@ -109,12 +110,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log("Unexpcted error: " + error)
             }
         }
-        await get_contract();
         // if (!localStorage.getItem("new_contract")) {
         //     await get_contract();
         // }
 
-        CONTRACT_ADDRESS = localStorage.getItem("new_contract") || "0xFCBea955Bf638C13fc3C02E66CcBE14157E044Fc";
+        CONTRACT_ADDRESS = await get_contract() || "0xFCBea955Bf638C13fc3C02E66CcBE14157E044Fc";
         console.log("New Contract: " + CONTRACT_ADDRESS);
         const CONTRACT_ABI = [ 
         {
