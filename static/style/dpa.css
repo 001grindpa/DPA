@@ -448,7 +448,7 @@ footer .x:hover {
     background-color: lightgray;
 }
 #index main .timerCont .viewTasks + .outerLtCont #LtCont ul {
-    margin-top: -125%;
+    margin-top: -150%;
     padding: 10px;
 }
 #index main .timerCont .viewTasks + .outerLtCont #LtCont ul h3 {
@@ -529,9 +529,7 @@ footer .x:hover {
     color: white;
     font-weight: bolder;
     font-size: large;
-    padding: 10px;
-    padding-left: 80px;
-    padding-right: 80px;
+    padding: 10px 80px;
     border-radius: 20px;
     border: none;
     cursor: pointer;
@@ -539,6 +537,7 @@ footer .x:hover {
 }
 #index main form .setBtn:hover {
     background-color: rgb(46, 179, 46);
+    padding: 12px 85px;
 }
 #index main form .setCont img {
     width: 70px;
