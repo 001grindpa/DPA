@@ -55,6 +55,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const note = document.querySelector("#note");
         const checkoutText = document.querySelector("#index .checkoutCont .carouselCont .outcome #cancel h4");
         const checkoutLoader = document.querySelector("#index .checkoutCont .carouselCont .outcome #cancel img");
+        const crntYear = document.querySelector("#year");
+
+        let year = new Date().getFullYear();
+        crntYear.textContent = year;
 
         note.style.fontSize = "small";
         note.style.color = "white";
@@ -772,5 +776,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             });
         };
-    };
+    } else if (document.body.id == "landing") {
+        const body = document.querySelector("body");
+        const crntYear = body.querySelector("#year");
+
+        let year = new Date().getFullYear();
+
+        crntYear.textContent = year;
+    }
+    
 });
